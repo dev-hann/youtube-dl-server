@@ -7,10 +7,11 @@ import (
 	"github.com/youtube_dl_server/src"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 )
 
-func main() {
+func updateNgrok() {
 	n := src.NgrokInit()
 	f := src.FirebaseServer{
 		Ctx:            context.Background(),
@@ -18,16 +19,20 @@ func main() {
 	}
 	f.Init()
 	f.UpdateData(n)
-	//port := os.Getenv("port")
-	//if port == "" {
-	//	port = "8444"
-	//}
-	//
-	//r := mux.NewRouter()
-	//r.HandleFunc("/audio/{url}", audioHandler).Methods("GET")
-	//http.Handle("/", r)
-	//log.Println("Starting " + src.MyIp() + ":" + port)
-	//log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func main() {
+	updateNgrok()
+	port := os.Getenv("port")
+	if port == "" {
+		port = "8444"
+	}
+
+	r := mux.NewRouter()
+	r.HandleFunc("/audio/{url}", audioHandler).Methods("GET")
+	http.Handle("/", r)
+	log.Println("Starting " + src.MyIp() + ":" + port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 func audioHandler(writer http.ResponseWriter, request *http.Request) {

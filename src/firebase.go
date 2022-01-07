@@ -25,12 +25,8 @@ func (f *FirebaseServer) Init() {
 }
 
 func (f *FirebaseServer) UpdateData(data interface{}) {
-	//var tmpData []byte
-	//tmpData, err = json.Marshal(data)
-	//log.Println(string(tmpData))
-
 	var res *firestore.WriteResult
 	res, err = f.client.Collection("youtube-dl").Doc("server").Set(f.Ctx, data)
 	checkErr()
-	log.Println(res)
+	log.Println(res.UpdateTime.String() + " =>  update on FireStore")
 }
