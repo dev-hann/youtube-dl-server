@@ -14,7 +14,7 @@ func main() {
 	n := src.NgrokInit()
 	f := src.FirebaseServer{
 		Ctx:            context.Background(),
-		CredentialPath: "./src/youtube-dl-336806-c0ecf19c4ebd.json",
+		CredentialPath: "./src/dl-3d6b1-firebase-adminsdk-kj9kt-58c9c830f0.json",
 	}
 	f.Init()
 	f.UpdateData(n)

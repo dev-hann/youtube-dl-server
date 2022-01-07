@@ -15,14 +15,13 @@ type FirebaseServer struct {
 }
 
 func (f *FirebaseServer) Init() {
-	sa := option.WithCredentialsFile(f.CredentialPath)
+	opt := option.WithCredentialsFile(f.CredentialPath)
 	var app *firebase.App
-	app, err = firebase.NewApp(f.Ctx, nil, sa)
+	app, err = firebase.NewApp(f.Ctx, nil, opt)
 	checkErr()
 
 	f.client, err = app.Firestore(f.Ctx)
 	checkErr()
-	//defer f.client.Close()
 }
 
 func (f *FirebaseServer) UpdateData(data interface{}) {
@@ -31,7 +30,7 @@ func (f *FirebaseServer) UpdateData(data interface{}) {
 	//log.Println(string(tmpData))
 
 	var res *firestore.WriteResult
-	res, err = f.client.Collection("youtube-dl").Doc("server").Set(f.Ctx, map[string]interface{}{"hello": 3333})
+	res, err = f.client.Collection("youtube-dl").Doc("server").Set(f.Ctx, data)
 	checkErr()
 	log.Println(res)
 }
