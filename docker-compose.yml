@@ -2,20 +2,28 @@ version: '3.0'
 # 1WCAgt7sYeZiXuASnZaRl8ar6v7_4aNMHQA8tm7MfHk3sNr2j
 
 services:
-  youtube-dl:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-
   ngrok:
     image: wernight/ngrok
     ports:
       - "4040:4040"
+    networks:
+      - mynetwork
     environment:
       NGROK_PROTOCOL: http
-      NGROK_PORT: youtube-dl:80
-      NGROK_AUTH: 1WCAgt7sYeZiXuASnZaRl8ar6v7_4aNMHQA8tm7MfHk3sNr2j
+      NGROK_PORT: 80:80
+      NGROK_AUTH: 23ORZOPU4U7aASMSoP25uNfUzTT_7CYoused57rzj9yPTCYgy
+
+  youtube-dl:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    networks:
+      - mynetwork
+    ports:
+      - "80:80"
     depends_on:
-      - youtube-dl
+      - ngrok
+
+networks:
+  mynetwork:
+    driver: bridge
