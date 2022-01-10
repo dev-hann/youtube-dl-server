@@ -38,7 +38,7 @@ func NgrokInit(port string) *Ngrok {
 
 func ngrok() *Ngrok {
 	var res *http.Response
-	res, err = http.Get("http://127.0.0.1:4040/api/tunnels")
+	res, err = http.Get("http://localhost:4040/api/tunnels")
 	checkErr()
 	defer res.Body.Close()
 	var body []byte
