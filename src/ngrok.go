@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os/exec"
+	"sync"
 )
 
 type Ngrok struct {
@@ -18,16 +20,29 @@ type Tunnel struct {
 	Proto     string `json:"proto"`
 }
 
+func initCmd() {
+	log.Println("init ngrok..")
+	log.Println("run ngrok")
+	cmd := exec.Command("ngrok", "http", "8444")
+	go cmd.CombinedOutput()
+	wg.Done()
+}
+
+var wg sync.WaitGroup
+
 func NgrokInit() *Ngrok {
+	wg.Add(1)
+	initCmd()
+	wg.Wait()
+	log.Println("done ngrok")
 	var res *http.Response
-	res, err = http.Get("http://ngrok:4040/api/tunnels")
+	res, err = http.Get("http://localhost:4040/api/tunnels")
 	//res, err = http.Get("http://172.28.0.2:4040/api/tunnels")
 	checkErr()
 	defer res.Body.Close()
 	var body []byte
 	body, err = ioutil.ReadAll(res.Body)
 	checkErr()
-	log.Println(string(body))
 	var n Ngrok
 	err = json.Unmarshal(body, &n)
 	checkErr()

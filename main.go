@@ -22,7 +22,8 @@ func updateNgrok() {
 }
 
 func main() {
-	updateNgrok()
+
+	//updateNgrok()
 	port := os.Getenv("port")
 	if port == "" {
 		port = "8444"
