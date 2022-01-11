@@ -6,7 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
-	"sync"
+	"strconv"
+	"time"
 )
 
 type Ngrok struct {
@@ -20,24 +21,24 @@ type Tunnel struct {
 	Proto     string `json:"proto"`
 }
 
-func initCmd() {
-	log.Println("init ngrok..")
-	log.Println("run ngrok")
-	cmd := exec.Command("ngrok", "http", "8444")
-	go cmd.CombinedOutput()
-	wg.Done()
+func NgrokInit(port string) *Ngrok {
+	go ngrokRunCmd(port)
+	tryCount := 0
+	n := Ngrok{}
+
+	for len(n.Tunnels) == 0 {
+		time.Sleep(1 * time.Second)
+		tryCount++
+		log.Println("init Ngrok Server => try Count : " + strconv.Itoa(tryCount) + " times..")
+		n = *ngrok()
+	}
+	log.Println("Completed Run Ngrok")
+	return &n
 }
 
-var wg sync.WaitGroup
-
-func NgrokInit() *Ngrok {
-	wg.Add(1)
-	initCmd()
-	wg.Wait()
-	log.Println("done ngrok")
+func ngrok() *Ngrok {
 	var res *http.Response
 	res, err = http.Get("http://localhost:4040/api/tunnels")
-	//res, err = http.Get("http://172.28.0.2:4040/api/tunnels")
 	checkErr()
 	defer res.Body.Close()
 	var body []byte
@@ -47,4 +48,12 @@ func NgrokInit() *Ngrok {
 	err = json.Unmarshal(body, &n)
 	checkErr()
 	return &n
+}
+
+const ngrokToken = "23ORZOPU4U7aASMSoP25uNfUzTT_7CYoused57rzj9yPTCYgy"
+
+func ngrokRunCmd(port string) {
+	cmd := exec.Command("ngrok", "http", port, "--authtoken", ngrokToken)
+	_, err = cmd.CombinedOutput()
+	checkErr()
 }

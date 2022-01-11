@@ -11,8 +11,8 @@ import (
 	"os/exec"
 )
 
-func updateNgrok() {
-	n := src.NgrokInit()
+func updateNgrok(port string) {
+	n := src.NgrokInit(port)
 	f := src.FirebaseServer{
 		Ctx:            context.Background(),
 		CredentialPath: "./src/dl-3d6b1-firebase-adminsdk-kj9kt-58c9c830f0.json",
@@ -22,12 +22,11 @@ func updateNgrok() {
 }
 
 func main() {
-
-	//updateNgrok()
 	port := os.Getenv("port")
 	if port == "" {
 		port = "8444"
 	}
+	updateNgrok(port)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/audio/{url}", audioHandler).Methods("GET")
