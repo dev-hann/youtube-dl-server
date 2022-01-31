@@ -1,4 +1,4 @@
-FROM snapcore/snapcraft:stable
+FROM golang
 ENV port 80
 EXPOSE 80
 
