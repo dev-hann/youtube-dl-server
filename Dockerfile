@@ -8,7 +8,7 @@ RUN apt-get install -y youtube-dl
 
 # install ngrok
 RUN apt-get install -y unzip wget
-RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip  --no-check-certificate
+RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip  --no-check-certificate
 RUN unzip ngrok-stable-linux-arm.zip
 RUN mv ./ngrok /usr/bin/ngrok
 

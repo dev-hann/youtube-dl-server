@@ -21,8 +21,8 @@ type Tunnel struct {
 	Proto     string `json:"proto"`
 }
 
-func NgrokInit(port string) *Ngrok {
-	go ngrokRunCmd(port)
+func NgrokInit(port string,token string) *Ngrok {
+	go ngrokRunCmd(port,token)
 	tryCount := 0
 	n := Ngrok{}
 
@@ -50,13 +50,8 @@ func ngrok() *Ngrok {
 	return &n
 }
 
-func ngrokRunCmd(port string) {
-	token, err := ioutil.ReadFile("./src/ngrok_token")
-	if err != nil {
-		log.Panicln(err)
-	}
-	ngrokToken := string(token)
-	cmd := exec.Command("ngrok", "http", port, "--authtoken", ngrokToken)
+func ngrokRunCmd(port string,token string) {
+	cmd := exec.Command("ngrok", "http", port, "--authtoken", token)
 	_, err = cmd.CombinedOutput()
 	checkErr()
 }

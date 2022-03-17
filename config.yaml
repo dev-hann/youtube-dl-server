@@ -1,0 +1,4 @@
+firebase_token_path: "./firebase_token.json"
+ngrok:
+  port: "8444"
+  token: "23ORZOPU4U7aASMSoP25uNfUzTT_7CYoused57rzj9yPTCYgy"

@@ -7,32 +7,29 @@ import (
 	"github.com/youtube_dl_server/src"
 	"log"
 	"net/http"
-	"os"
 	"os/exec"
 )
 
-func updateNgrok(port string) {
-	n := src.NgrokInit(port)
-	f := src.FirebaseServer{
-		Ctx:            context.Background(),
-		CredentialPath: "./src/firebase_token.json",
-	}
-	f.Init()
-	f.UpdateData(n)
-}
-
 func main() {
-	port := os.Getenv("port")
-	if port == "" {
-		port = "8444"
-	}
-	updateNgrok(port)
+	config := src.NewConfig()
+
+	updateNgrok(config)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/audio/{url}", audioHandler).Methods("GET")
 	http.Handle("/", r)
-	log.Println("Starting " + src.MyIp() + ":" + port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Println("Starting " + src.MyIp() + ":" + config.NgrokPort)
+	log.Fatal(http.ListenAndServe(":"+config.NgrokPort, nil))
+}
+
+func updateNgrok(config *src.Config) {
+	n := src.NgrokInit(config.NgrokPort, config.NgrokToken)
+	f := src.FirebaseServer{
+		Ctx:            context.Background(),
+		CredentialPath: config.FirebaseTokenPath,
+	}
+	f.Init()
+	f.UpdateData(n)
 }
 
 func audioHandler(writer http.ResponseWriter, request *http.Request) {
