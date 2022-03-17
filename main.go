@@ -15,7 +15,7 @@ func updateNgrok(port string) {
 	n := src.NgrokInit(port)
 	f := src.FirebaseServer{
 		Ctx:            context.Background(),
-		CredentialPath: "./src/dl-3d6b1-firebase-adminsdk-kj9kt-58c9c830f0.json",
+		CredentialPath: "./src/token.json",
 	}
 	f.Init()
 	f.UpdateData(n)
