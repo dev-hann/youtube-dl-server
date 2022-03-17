@@ -18,7 +18,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/audio/{url}", audioHandler).Methods("GET")
 	http.Handle("/", r)
-	log.Println("Starting " + src.MyIp() + ":" + config.NgrokPort)
 	log.Fatal(http.ListenAndServe(":"+config.NgrokPort, nil))
 }
 
