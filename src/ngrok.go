@@ -50,8 +50,6 @@ func ngrok() *Ngrok {
 	return &n
 }
 
-const ngrokToken = "23ORZOPU4U7aASMSoP25uNfUzTT_7CYoused57rzj9yPTCYgy"
-
 func ngrokRunCmd(port string) {
 	token, err := ioutil.ReadFile("./src/ngrok_token")
 	if err != nil {
