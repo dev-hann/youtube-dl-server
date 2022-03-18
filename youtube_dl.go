@@ -4,13 +4,18 @@ import "os/exec"
 
 //https://github.com/ytdl-org/youtube-dl
 
+type YoutubeDlConfig struct {
+	AudioFormat  string
+	AudioQuality int
+}
+
 // AudioQuality is Between 0 (better) and 0 (worse), default 5.
 type YoutubeDL struct {
 	AudioFormat  string
 	AudioQuality int
 }
 
-func NewYoutubeDL() *YoutubeDL {
+func NewYoutubeDL(config Config) *YoutubeDL {
 	return &YoutubeDL{
 		AudioFormat:  "mp3",
 		AudioQuality: 5,

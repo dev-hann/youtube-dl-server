@@ -9,10 +9,12 @@ import (
 	"os/exec"
 )
 
+var youtubeDl *YoutubeDL
+
 func main() {
 
 	config := NewConfig("./config.yaml")
-
+	youtubeDl = NewYoutubeDL()
 	updateNgrok(config)
 
 	r := mux.NewRouter()
