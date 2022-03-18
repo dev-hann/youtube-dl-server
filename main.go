@@ -4,14 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/youtube_dl_server/src"
 	"log"
 	"net/http"
 	"os/exec"
 )
 
 func main() {
-	config := src.NewConfig()
+	config := NewConfig()
 
 	updateNgrok(config)
 
@@ -21,9 +20,9 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+config.NgrokPort, nil))
 }
 
-func updateNgrok(config *src.Config) {
-	n := src.NgrokInit(config.NgrokPort, config.NgrokToken)
-	f := src.FirebaseServer{
+func updateNgrok(config *Config) {
+	n := NgrokInit(config.NgrokPort, config.NgrokToken)
+	f := FirebaseServer{
 		Ctx:            context.Background(),
 		CredentialPath: config.FirebaseTokenPath,
 	}
@@ -35,11 +34,11 @@ func audioHandler(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	url := vars["url"]
 	dlURL, err := loadAudioURL(url)
-	var res *src.Response
+	var res *Response
 	if err != nil {
-		res = src.FailResponse(dlURL)
+		res = FailResponse(dlURL)
 	} else {
-		res = src.SuccessResponse(dlURL)
+		res = SuccessResponse(dlURL)
 	}
 	e := json.NewEncoder(writer)
 	e.SetEscapeHTML(false)
