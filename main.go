@@ -14,7 +14,7 @@ var youtubeDl *YoutubeDL
 func main() {
 
 	config := NewConfig("./config.yaml")
-	youtubeDl = NewYoutubeDL()
+	youtubeDl = NewYgoutubeDL()
 	updateNgrok(config)
 
 	r := mux.NewRouter()
