@@ -12,8 +12,8 @@ type Config struct {
 	NgrokPort         string
 }
 
-func NewConfig() *Config {
-	file, err := os.Open("./config.yaml")
+func NewConfig(path string) *Config {
+	file, err := os.Open(path)
 	if err != nil {
 		log.Panic(err)
 	}

@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	config := NewConfig()
+
+	config := NewConfig("./config.yaml")
 
 	updateNgrok(config)
 
