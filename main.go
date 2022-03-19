@@ -1,57 +1,28 @@
 package main
 
 import (
-	"context"
-	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/youtube-dl-server/api"
+	"github.com/youtube-dl-server/config"
+	"github.com/youtube-dl-server/firebase"
+	"github.com/youtube-dl-server/ngrok"
+	"github.com/youtube-dl-server/view"
+	"github.com/youtube-dl-server/youtube_dl"
 	"log"
 	"net/http"
-	"os/exec"
 )
-
-var youtubeDl *YoutubeDL
 
 func main() {
 
-	config := NewConfig("./config.yaml")
-	youtubeDl = NewYgoutubeDL()
-	updateNgrok(config)
+	c := config.NewConfig("./config.yaml")
+	dl := youtube_dl.NewYoutubeDL(c.YoutubeDlConfig)
+	n := ngrok.NewNgrok(c.NgrokConfig)
+	f := firebase.NewFirebase(c.FirebaseTokenPath)
+	f.UpdateNgrok(n)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/audio/{url}", audioHandler).Methods("GET")
+	view.InitView(r, c.ViewConfig)
+	api.InitApiHandler(r, c.ApiConfig, dl)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":"+config.NgrokPort, nil))
-}
-
-func updateNgrok(config *Config) {
-	n := NgrokInit(config.NgrokPort, config.NgrokToken)
-	f := FirebaseServer{
-		Ctx:            context.Background(),
-		CredentialPath: config.FirebaseTokenPath,
-	}
-	f.Init()
-	f.UpdateData(n)
-}
-
-func audioHandler(writer http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	url := vars["url"]
-	dlURL, err := loadAudioURL(url)
-	var res *Response
-	if err != nil {
-		res = FailResponse(dlURL)
-	} else {
-		res = SuccessResponse(dlURL)
-	}
-	e := json.NewEncoder(writer)
-	e.SetEscapeHTML(false)
-	e.Encode(res)
-}
-
-func loadAudioURL(url string) (string, error) {
-	log.Println("request audio url => " + url)
-	cmd := exec.Command("youtube-dl", "-x", "--audio-format", "mp3", url, "--get-url")
-	out, err := cmd.CombinedOutput()
-	//log.Println(string(out))
-	return string(out), err
+	log.Fatal(http.ListenAndServe(":"+c.NgrokConfig.Port, nil))
 }
