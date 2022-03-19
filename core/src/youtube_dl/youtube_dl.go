@@ -1,26 +1,34 @@
 package youtube_dl
 
 import (
+	"github.com/youtube-dl-server/config"
 	"os/exec"
 	"strconv"
+	"strings"
 )
 
 //https://github.com/ytdl-org/youtube-dl
 
-type Config struct {
-	AudioFormat  string
-	AudioQuality int
-}
-
 // AudioQuality is Between 0 (better) and 0 (worse), default 5.
 type YoutubeDL struct {
-	config *Config
+	version string
+	config  *config.YoutubeConfig
 }
 
-func NewYoutubeDL(config *Config) *YoutubeDL {
+func NewYoutubeDL(config *config.YoutubeConfig) *YoutubeDL {
 	return &YoutubeDL{
-		config: config,
+		version: loadVersion(),
+		config:  config,
 	}
+}
+
+func loadVersion() string {
+	cmd := exec.Command("youtube-dl", "--version")
+	data, err := cmd.CombinedOutput()
+	if err != nil {
+		return "Version Error"
+	}
+	return strings.Trim(string(data), "\n")
 }
 
 // LoadAudio requires ffmpeg/avconv and ffprobe/avprobe.

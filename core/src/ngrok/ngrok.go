@@ -2,21 +2,19 @@ package ngrok
 
 import (
 	"encoding/json"
+	"github.com/youtube-dl-server/config"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 )
 
-type Config struct {
-	Port  string
-	Token string
-}
-
 type Ngrok struct {
-	config  *Config
+	version string
+	config  *config.NgrokConfig
 	Tunnels []Tunnel `json:"tunnels"`
 	Uri     string   `json:"uri"`
 }
@@ -27,11 +25,13 @@ type Tunnel struct {
 	Proto     string `json:"proto"`
 }
 
-func NewNgrok(config *Config) *Ngrok {
+func NewNgrok(config *config.NgrokConfig) *Ngrok {
 	go ngrokRunCmd(config.Port, config.Token)
 	tryCount := 0
-	n := Ngrok{}
-
+	n := Ngrok{
+		version: loadVersion(),
+		config:  config,
+	}
 	for len(n.Tunnels) == 0 {
 		time.Sleep(1 * time.Second)
 		tryCount++
@@ -40,6 +40,15 @@ func NewNgrok(config *Config) *Ngrok {
 	}
 	log.Println("Completed Run Ngrok")
 	return &n
+}
+
+func loadVersion() string {
+	cmd := exec.Command("ngrok", "--version")
+	data, err := cmd.CombinedOutput()
+	if err != nil {
+		return "Version Error"
+	}
+	return strings.Trim(strings.Split(string(data), " ")[2], "\n")
 }
 
 func ngrok() *Ngrok {

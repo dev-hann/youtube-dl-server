@@ -4,7 +4,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"context"
 	firebase "firebase.google.com/go"
-	"github.com/youtube-dl-server/ngrok"
+	"github.com/youtube-dl-server/core/src/ngrok"
 	"google.golang.org/api/option"
 	"log"
 )
@@ -39,7 +39,6 @@ func (f *Firebase) init() {
 }
 
 func (f *Firebase) UpdateNgrok(data *ngrok.Ngrok) {
-	//var res *firestore.WriteResult
 	res, err := f.client.Collection("youtube-dl").Doc("server").Set(f.Ctx, data)
 	if err != nil {
 		log.Panicln(err)

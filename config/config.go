@@ -2,20 +2,36 @@ package config
 
 import (
 	"github.com/spf13/viper"
-	"github.com/youtube-dl-server/api"
-	"github.com/youtube-dl-server/ngrok"
-	"github.com/youtube-dl-server/view"
-	"github.com/youtube-dl-server/youtube_dl"
 	"log"
 	"os"
 )
 
 type Config struct {
-	FirebaseTokenPath string
-	NgrokConfig       *ngrok.Config
-	YoutubeDlConfig   *youtube_dl.Config
-	ApiConfig         *api.Config
-	ViewConfig        *view.Config
+	FirebaseTokenPath string         `json:"firebase_token_path"`
+	NgrokConfig       *NgrokConfig   `json:"ngrok_config"`
+	YoutubeDlConfig   *YoutubeConfig `json:"youtube_dl_config"`
+	ApiConfig         *ApiConfig     `json:"api_config"`
+	ViewConfig        *ViewConfig    `json:"view_config"`
+}
+
+type NgrokConfig struct {
+	Port  string `json:"port"`
+	Token string `json:"token"`
+}
+
+type YoutubeConfig struct {
+	AudioFormat  string `json:"audio_format"`
+	AudioQuality int    `json:"audio_quality"`
+}
+
+type ApiConfig struct {
+	Version   string `json:"version"`
+	ConfigApi string `json:"config_api"`
+	AudioApi  string `json:"audio_api"`
+}
+
+type ViewConfig struct {
+	Path string `json:"path"`
 }
 
 func NewConfig(path string) *Config {
@@ -31,17 +47,21 @@ func NewConfig(path string) *Config {
 	}
 	return &Config{
 		FirebaseTokenPath: viper.GetString("firebase_token_path"),
-		NgrokConfig: &ngrok.Config{
+		NgrokConfig: &NgrokConfig{
 			Token: viper.GetString("ngrok.token"),
 			Port:  viper.GetString("ngrok.port"),
 		},
-		YoutubeDlConfig: &youtube_dl.Config{
+		YoutubeDlConfig: &YoutubeConfig{
 			AudioFormat:  viper.GetString("youtube_dl.audio_format"),
 			AudioQuality: viper.GetInt("youtube_dl.audio_quality"),
 		},
-		ApiConfig: &api.Config{
-			Version:  viper.GetString("API.version"),
-			AudioAPI: viper.GetString("API.audioAPI"),
+		ApiConfig: &ApiConfig{
+			Version:   viper.GetString("Api.version"),
+			ConfigApi: viper.GetString("Api.config_api"),
+			AudioApi:  viper.GetString("Api.audio_api"),
+		},
+		ViewConfig: &ViewConfig{
+			Path: viper.GetString("view.path"),
 		},
 	}
 }

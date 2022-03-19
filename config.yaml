@@ -5,10 +5,12 @@ ngrok:
 youtube_dl:
   audio_format: "mp3"
   audio_quality: 5
-API:
+Api:
   version: "v1"
-  audioAPI: "/audio/{videoID}"
-View:
+  config_api: "/config"
+  audio_api: "/audio/{videoID}"
+  log_api: "/log/{page}"
+view:
   path: "./view/web/"
 
 

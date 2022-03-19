@@ -2,14 +2,11 @@ package view
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/youtube-dl-server/config"
 	"net/http"
 )
 
-type Config struct {
-	Path string
-}
-
-func InitView(r *mux.Router, config *Config) {
-	fs := http.FileServer(http.Dir("./view/web/"))
+func InitView(r *mux.Router, config *config.ViewConfig) {
+	fs := http.FileServer(http.Dir(config.Path))
 	r.PathPrefix("/").Handler(fs)
 }

@@ -2,34 +2,50 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/youtube-dl-server/config"
+	"github.com/youtube-dl-server/core"
 	"github.com/youtube-dl-server/response"
-	"github.com/youtube-dl-server/youtube_dl"
+	"log"
 	"net/http"
 )
 
-type handleFunc = func(http.ResponseWriter, *http.Request)
-
-var dl *youtube_dl.YoutubeDL
-
-type Config struct {
-	Version  string
-	AudioAPI string
+type Api struct {
+	config *config.ApiConfig
+	core   *core.Core
 }
 
-func InitApiHandler(r *mux.Router, config *Config, youtubeDl *youtube_dl.YoutubeDL) {
-	dl = youtubeDl
-	config.handler(r, config.AudioAPI, audioHandler).Methods("GET")
+var api *Api
+
+func InitApiHandler(r *mux.Router, config *config.ApiConfig, core *core.Core) {
+	initApi(config, core)
+	log.Println("/" + config.Version + config.AudioApi)
+	r.HandleFunc("/"+config.Version+config.ConfigApi, configHandler).Methods("GET")
+	r.HandleFunc("/"+config.Version+config.AudioApi, audioHandler).Methods("GET")
 }
 
-func (c *Config) handler(r *mux.Router, path string, f handleFunc) *mux.Route {
-	return r.HandleFunc("/"+c.Version+path, f)
+func initApi(config *config.ApiConfig, core *core.Core) {
+	api = &Api{
+		config: config,
+		core:   core,
+	}
+}
+
+func configHandler(writer http.ResponseWriter, request *http.Request) {
+	data := api.core.LoadConfig()
+	res, err := json.Marshal(response.SuccessResponse(data))
+	if err != nil {
+		res, _ = json.Marshal(response.FailResponse(err))
+	}
+	fmt.Fprint(writer, string(res))
+
 }
 
 func audioHandler(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	url := vars["videoID"]
-	dlData, err := dl.LoadAudio(url)
+	dlData, err := api.core.LoadAudioURL(url)
 	dlURL := string(dlData)
 	var res *response.Response
 	if err != nil {
