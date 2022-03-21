@@ -7,7 +7,6 @@ import (
 	"github.com/youtube-dl-server/config"
 	"github.com/youtube-dl-server/core"
 	"github.com/youtube-dl-server/response"
-	"log"
 	"net/http"
 )
 
@@ -20,9 +19,9 @@ var api *Api
 
 func InitApiHandler(r *mux.Router, config *config.ApiConfig, core *core.Core) {
 	initApi(config, core)
-	log.Println("/" + config.Version + config.AudioApi)
 	r.HandleFunc("/"+config.Version+config.ConfigApi, configHandler).Methods("GET")
 	r.HandleFunc("/"+config.Version+config.AudioApi, audioHandler).Methods("GET")
+	r.HandleFunc("/"+config.Version+config.MelonApi, melonHandler).Methods("GET")
 }
 
 func initApi(config *config.ApiConfig, core *core.Core) {
@@ -30,6 +29,16 @@ func initApi(config *config.ApiConfig, core *core.Core) {
 		config: config,
 		core:   core,
 	}
+}
+
+func melonHandler(writer http.ResponseWriter, request *http.Request) {
+	m := api.core.LoadMelon()
+	res, err := json.Marshal(response.SuccessResponse(m))
+	if err != nil {
+		res, _ = json.Marshal(response.FailResponse(err))
+	}
+	fmt.Fprint(writer, string(res))
+
 }
 
 func configHandler(writer http.ResponseWriter, request *http.Request) {

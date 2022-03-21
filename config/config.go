@@ -28,6 +28,7 @@ type ApiConfig struct {
 	Version   string `json:"version"`
 	ConfigApi string `json:"config_api"`
 	AudioApi  string `json:"audio_api"`
+	MelonApi  string `json:"melon_api"`
 }
 
 type ViewConfig struct {
@@ -59,6 +60,7 @@ func NewConfig(path string) *Config {
 			Version:   viper.GetString("Api.version"),
 			ConfigApi: viper.GetString("Api.config_api"),
 			AudioApi:  viper.GetString("Api.audio_api"),
+			MelonApi:  viper.GetString("Api.melon_api"),
 		},
 		ViewConfig: &ViewConfig{
 			Path: viper.GetString("view.path"),
