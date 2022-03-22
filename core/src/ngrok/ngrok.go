@@ -58,7 +58,6 @@ func ngrok() *Ngrok {
 		log.Println(err)
 	}
 	defer res.Body.Close()
-	//var body []byte
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Panicln(err)

@@ -6,25 +6,32 @@ import (
 	"strings"
 )
 
-const _melonTop50URL = "https://www.melon.com/chart/index.htm"
+const _melonTopURL = "https://www.melon.com/chart/index.htm"
 
 type Melon struct {
-	top50URL string
+	topURL string
 }
 
 func NewMelon() *Melon {
 	return &Melon{
-		top50URL: _melonTop50URL,
+		topURL: _melonTopURL,
 	}
 }
 
-func (m *Melon) Top50() *Top {
-	top := Top{
+func (m *Melon) Top() *Top {
+	top := &Top{
 		ItemList: []*Sing{},
 	}
-	c := colly.NewCollector()
-	top.Title = getTitle(c)
-	top.SubTitle = getSubTitle(c)
+	c := colly.NewCollector(
+		colly.MaxDepth(2),
+		colly.Async(true),
+	)
+	err := c.Limit(&colly.LimitRule{DomainGlob: "*", Parallelism: 2})
+	if err != nil {
+		log.Panicln(err)
+	}
+	getTitle(c, top)
+	getSubTitle(c, top)
 	c.OnHTML("tr", func(e *colly.HTMLElement) {
 		var tmpSing Sing
 		e.ForEach("td", func(i int, td *colly.HTMLElement) {
@@ -58,8 +65,9 @@ func (m *Melon) Top50() *Top {
 			top.ItemList = append(top.ItemList, &tmpSing)
 		}
 	})
-	c.Visit(m.top50URL)
-	return &top
+	c.Visit(m.topURL)
+	c.Wait()
+	return top
 
 }
 
@@ -76,23 +84,23 @@ func isAlbumNameClass(className string) bool {
 	return isContains(className, "03")
 }
 
-func getTitle(c *colly.Collector) string {
-	res := ""
+func getTitle(c *colly.Collector, top *Top) {
 	c.OnHTML("span", func(element *colly.HTMLElement) {
 		if element.Attr("class") == "yyyymmdd" {
-			make here to goroutine
-			return strings.TrimSpace(element.Text)
+			res := ""
+			res = strings.TrimSpace(element.Text)
+			top.Title = res
+			log.Println(res)
 		}
 	})
-	return res
 }
 
-func getSubTitle(c *colly.Collector) string {
-	res := ""
+func getSubTitle(c *colly.Collector, top *Top) {
 	c.OnHTML("span.hhmm", func(element *colly.HTMLElement) {
+		res := ""
 		res = strings.TrimSpace(element.Text)
+		top.SubTitle = res
 	})
-	return res
 }
 
 func getHeadPhoto(e *colly.HTMLElement) string {

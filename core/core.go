@@ -38,5 +38,5 @@ func (c *Core) LoadConfig() interface{} {
 }
 
 func (c *Core) LoadMelon() interface{} {
-	return c.melon.Top50()
+	return c.melon.Top()
 }
