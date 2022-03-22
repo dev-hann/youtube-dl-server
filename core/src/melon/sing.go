@@ -1,9 +1,9 @@
 package melon
 
 type Sing struct {
-	Rank      string
-	Title     string
-	HeadPhoto string
-	Artist    string
-	AlbumName string
+	Rank      string `json:"rank"`
+	Title     string `json:"title"`
+	HeadPhoto string `json:"head_photo"`
+	Artist    string `json:"artist"`
+	AlbumName string `json:"album_name"`
 }

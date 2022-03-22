@@ -2,6 +2,7 @@ package melon
 
 import (
 	"github.com/gocolly/colly"
+	"log"
 	"strings"
 )
 
@@ -19,11 +20,11 @@ func NewMelon() *Melon {
 
 func (m *Melon) Top50() *Top {
 	top := Top{
-		Items: []*Sing{},
+		ItemList: []*Sing{},
 	}
 	c := colly.NewCollector()
-	top.Date = getDate(c)
-	top.Time = getTime(c)
+	top.Title = getTitle(c)
+	top.SubTitle = getSubTitle(c)
 	c.OnHTML("tr", func(e *colly.HTMLElement) {
 		var tmpSing Sing
 		e.ForEach("td", func(i int, td *colly.HTMLElement) {
@@ -54,7 +55,7 @@ func (m *Melon) Top50() *Top {
 			})
 		})
 		if tmpSing.Rank != "" {
-			top.Items = append(top.Items, &tmpSing)
+			top.ItemList = append(top.ItemList, &tmpSing)
 		}
 	})
 	c.Visit(m.top50URL)
@@ -75,15 +76,18 @@ func isAlbumNameClass(className string) bool {
 	return isContains(className, "03")
 }
 
-func getDate(c *colly.Collector) string {
+func getTitle(c *colly.Collector) string {
 	res := ""
-	c.OnHTML("span.yyyymmdd", func(element *colly.HTMLElement) {
-		res = strings.TrimSpace(element.Text)
+	c.OnHTML("span", func(element *colly.HTMLElement) {
+		if element.Attr("class") == "yyyymmdd" {
+			make here to goroutine
+			return strings.TrimSpace(element.Text)
+		}
 	})
 	return res
 }
 
-func getTime(c *colly.Collector) string {
+func getSubTitle(c *colly.Collector) string {
 	res := ""
 	c.OnHTML("span.hhmm", func(element *colly.HTMLElement) {
 		res = strings.TrimSpace(element.Text)

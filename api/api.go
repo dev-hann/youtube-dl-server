@@ -6,7 +6,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/youtube-dl-server/config"
 	"github.com/youtube-dl-server/core"
-	"github.com/youtube-dl-server/response"
 	"net/http"
 )
 
@@ -33,9 +32,9 @@ func initApi(config *config.ApiConfig, core *core.Core) {
 
 func melonHandler(writer http.ResponseWriter, request *http.Request) {
 	m := api.core.LoadMelon()
-	res, err := json.Marshal(response.SuccessResponse(m))
+	res, err := json.Marshal(SuccessResponse(m))
 	if err != nil {
-		res, _ = json.Marshal(response.FailResponse(err))
+		res, _ = json.Marshal(FailResponse(err))
 	}
 	fmt.Fprint(writer, string(res))
 
@@ -43,9 +42,9 @@ func melonHandler(writer http.ResponseWriter, request *http.Request) {
 
 func configHandler(writer http.ResponseWriter, request *http.Request) {
 	data := api.core.LoadConfig()
-	res, err := json.Marshal(response.SuccessResponse(data))
+	res, err := json.Marshal(SuccessResponse(data))
 	if err != nil {
-		res, _ = json.Marshal(response.FailResponse(err))
+		res, _ = json.Marshal(FailResponse(err))
 	}
 	fmt.Fprint(writer, string(res))
 
@@ -56,11 +55,11 @@ func audioHandler(writer http.ResponseWriter, request *http.Request) {
 	url := vars["videoID"]
 	dlData, err := api.core.LoadAudioURL(url)
 	dlURL := string(dlData)
-	var res *response.Response
+	var res *Response
 	if err != nil {
-		res = response.FailResponse(dlURL)
+		res = FailResponse(dlURL)
 	} else {
-		res = response.SuccessResponse(dlURL)
+		res = SuccessResponse(dlURL)
 	}
 	e := json.NewEncoder(writer)
 	e.SetEscapeHTML(false)

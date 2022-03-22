@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"context"
 	firebase "firebase.google.com/go"
+	"github.com/youtube-dl-server/config"
 	"github.com/youtube-dl-server/core/src/ngrok"
 	"google.golang.org/api/option"
 	"log"
@@ -15,10 +16,10 @@ type Firebase struct {
 	client         *firestore.Client
 }
 
-func NewFirebase(tokenPath string) *Firebase {
+func NewFirebase(config *config.FirebaseConfig) *Firebase {
 	f := Firebase{
 		Ctx:            context.Background(),
-		CredentialPath: tokenPath,
+		CredentialPath: config.TokenPath,
 	}
 	f.init()
 	return &f
@@ -26,7 +27,6 @@ func NewFirebase(tokenPath string) *Firebase {
 
 func (f *Firebase) init() {
 	opt := option.WithCredentialsFile(f.CredentialPath)
-	//var app *firebase.App
 	app, err := firebase.NewApp(f.Ctx, nil, opt)
 	if err != nil {
 		log.Panicln(err)

@@ -18,7 +18,7 @@ type Core struct {
 func InitCore(c *config.Config) *Core {
 	dl := youtube_dl.NewYoutubeDL(c.YoutubeDlConfig)
 	n := ngrok.NewNgrok(c.NgrokConfig)
-	f := firebase.NewFirebase(c.FirebaseTokenPath)
+	f := firebase.NewFirebase(c.FirebaseConfig)
 	f.UpdateNgrok(n)
 	m := melon.NewMelon()
 	return &Core{

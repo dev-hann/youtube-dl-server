@@ -1,7 +1,7 @@
 package melon
 
 type Top struct {
-	Date  string
-	Time  string
-	Items []*Sing
+	Title    string  `json:"title"`
+	SubTitle string  `json:"sub_title"`
+	ItemList []*Sing `json:"item_list"`
 }

@@ -1,11 +1,14 @@
-firebase_token_path: "./firebase_token.json"
+firebase:
+  token_path: "./firebase_token.json"
 ngrok:
   port: "8444"
   token: "23ORZOPU4U7aASMSoP25uNfUzTT_7CYoused57rzj9yPTCYgy"
 youtube_dl:
   audio_format: "mp3"
   audio_quality: 5
-Api:
+
+  # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
+api:
   version: "v1"
   config_api: "/config"
   audio_api: "/audio/{videoID}"
