@@ -40,3 +40,7 @@ func (c *Core) LoadConfig() interface{} {
 func (c *Core) LoadMelon() interface{} {
 	return c.melon.Top()
 }
+
+func (c *Core) balladeTest() {
+	c.melon.Ballade()
+}

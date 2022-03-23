@@ -16,5 +16,3 @@ api:
   melon_api: "/melon"
 view:
   path: "./view/web/"
-
-
