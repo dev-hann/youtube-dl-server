@@ -20,7 +20,7 @@ func InitCore(c *config.Config) *Core {
 	n := ngrok.NewNgrok(c.NgrokConfig)
 	f := firebase.NewFirebase(c.FirebaseConfig)
 	f.UpdateNgrok(n)
-	m := melon.NewMelon()
+	m := melon.NewMelon(c.MelonConfig)
 	return &Core{
 		config:    c,
 		ngrok:     n,
@@ -37,10 +37,6 @@ func (c *Core) LoadConfig() interface{} {
 	return c.config
 }
 
-func (c *Core) LoadMelon() interface{} {
-	return c.melon.Top()
-}
-
-func (c *Core) balladeTest() {
-	c.melon.Ballade()
+func (c *Core) LoadMelonChart() interface{} {
+	return c.melon.LoadChartList()
 }

@@ -31,7 +31,7 @@ func initApi(config *config.ApiConfig, core *core.Core) {
 }
 
 func melonHandler(writer http.ResponseWriter, request *http.Request) {
-	m := api.core.LoadMelon()
+	m := api.core.LoadMelonChart()
 	res, err := json.Marshal(SuccessResponse(m))
 	if err != nil {
 		res, _ = json.Marshal(FailResponse(err))

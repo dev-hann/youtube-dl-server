@@ -6,6 +6,16 @@ ngrok:
 youtube_dl:
   audio_format: "mp3"
   audio_quality: 5
+melon_chart:
+  top: 40
+  ballade: 10
+  dance: 1
+  hiphop: 1
+  rnb: 1
+  indie: 1
+  rock: 1
+  trot: 1
+  folk: 1
 
   # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
 api:

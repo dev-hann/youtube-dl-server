@@ -12,6 +12,7 @@ type Config struct {
 	YoutubeDlConfig *YoutubeConfig  `json:"youtube_dl_config"`
 	ApiConfig       *ApiConfig      `json:"api_config"`
 	ViewConfig      *ViewConfig     `json:"view_config"`
+	MelonConfig     *MelonConfig    `json:"melon_config"`
 }
 
 type FirebaseConfig struct {
@@ -37,6 +38,18 @@ type ApiConfig struct {
 
 type ViewConfig struct {
 	Path string `json:"path"`
+}
+
+type MelonConfig struct {
+	Top     int `json:"top"`
+	Ballade int `json:"ballade"`
+	Dance   int `json:"dance"`
+	Hiphop  int `json:"hiphop"`
+	Rnb     int `json:"rnb"`
+	Indie   int `json:"indie"`
+	Rock    int `json:"rock"`
+	Trot    int `json:"trot"`
+	Folk    int `json:"folk"`
 }
 
 func NewConfig(path string) *Config {
@@ -70,6 +83,17 @@ func NewConfig(path string) *Config {
 		},
 		ViewConfig: &ViewConfig{
 			Path: viper.GetString("view.path"),
+		},
+		MelonConfig: &MelonConfig{
+			Top:     viper.GetInt("melon_chart.top"),
+			Ballade: viper.GetInt("melon_chart.ballade"),
+			Dance:   viper.GetInt("melon_chart.dance"),
+			Hiphop:  viper.GetInt("melon_chart.hiphop"),
+			Rnb:     viper.GetInt("melon_chart.rnb"),
+			Indie:   viper.GetInt("melon_chart.indie"),
+			Rock:    viper.GetInt("melon_chart.rock"),
+			Trot:    viper.GetInt("melon_chart.trot"),
+			Folk:    viper.GetInt("melon_chart.folk"),
 		},
 	}
 }
