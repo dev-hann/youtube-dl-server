@@ -1,8 +1,6 @@
 package api
 
 import (
-	"encoding/json"
-	"log"
 	"time"
 )
 
@@ -22,12 +20,4 @@ func FailResponse(err interface{}) *Response {
 
 func SuccessResponse(data interface{}) *Response {
 	return &Response{DateTime: currentTime(), Result: true, Data: data}
-}
-
-func marshall(res Response) string {
-	resString, err := json.Marshal(res)
-	if err != nil {
-		log.Println(err)
-	}
-	return string(resString)
 }

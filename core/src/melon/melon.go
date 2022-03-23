@@ -9,14 +9,15 @@ import (
 
 const (
 	_TopURL     = "https://www.melon.com/chart/index.htm"
-	_BalladeURL = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0100"
-	_DanceURL   = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0200"
-	_HiphopURL  = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0300"
-	_RnbURL     = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0400"
-	_IndieURL   = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0500"
-	_RockURL    = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0600"
-	_TrotURL    = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0700"
-	_FolkURL    = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0800"
+	_genre      = "https://www.melon.com/genre/song_list.htm?gnrCode=GN0"
+	_BalladeURL = _genre + "100"
+	_DanceURL   = _genre + "200"
+	_HiphopURL  = _genre + "300"
+	_RnbURL     = _genre + "400"
+	_IndieURL   = _genre + "500"
+	_RockURL    = _genre + "600"
+	_TrotURL    = _genre + "700"
+	_FolkURL    = _genre + "800"
 )
 
 type Melon struct {
