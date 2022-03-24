@@ -37,7 +37,6 @@ func melonHandler(writer http.ResponseWriter, request *http.Request) {
 		res, _ = json.Marshal(FailResponse(err))
 	}
 	fmt.Fprint(writer, string(res))
-
 }
 
 func configHandler(writer http.ResponseWriter, request *http.Request) {

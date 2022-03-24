@@ -18,3 +18,9 @@ func InitLogger(config *config.LoggerConfig) {
 	log.SetOutput(f)
 	log.Info("Init Server..")
 }
+
+func Api()  {
+
+}
+
+
