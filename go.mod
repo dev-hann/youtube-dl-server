@@ -7,6 +7,7 @@ require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/gocolly/colly v1.2.0
 	github.com/gorilla/mux v1.8.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.10.1
 	google.golang.org/api v0.73.0
 )

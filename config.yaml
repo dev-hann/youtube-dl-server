@@ -22,7 +22,7 @@ api:
   version: "v1"
   config_api: "/config"
   audio_api: "/audio/{videoID}"
-  log_api: "/log/{page}"
+  log_api: "/logger/{page}"
   melon_api: "/melon"
 view:
   path: "./view/web/"
