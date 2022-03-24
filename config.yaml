@@ -16,7 +16,8 @@ melon_chart:
   rock: 1
   trot: 1
   folk: 1
-
+logger:
+  path: "./log"
   # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
 api:
   version: "v1"

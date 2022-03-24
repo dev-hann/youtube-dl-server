@@ -13,6 +13,7 @@ type Config struct {
 	ApiConfig       *ApiConfig      `json:"api_config"`
 	ViewConfig      *ViewConfig     `json:"view_config"`
 	MelonConfig     *MelonConfig    `json:"melon_config"`
+	LoggerConfig    *LoggerConfig   `json:"logger_config"`
 }
 
 type FirebaseConfig struct {
@@ -50,6 +51,10 @@ type MelonConfig struct {
 	Rock    int `json:"rock"`
 	Trot    int `json:"trot"`
 	Folk    int `json:"folk"`
+}
+
+type LoggerConfig struct {
+	Path string `json:"path"`
 }
 
 func NewConfig(path string) *Config {
@@ -94,6 +99,9 @@ func NewConfig(path string) *Config {
 			Rock:    viper.GetInt("melon_chart.rock"),
 			Trot:    viper.GetInt("melon_chart.trot"),
 			Folk:    viper.GetInt("melon_chart.folk"),
+		},
+		LoggerConfig: &LoggerConfig{
+			Path: viper.GetString("logger.path"),
 		},
 	}
 }
