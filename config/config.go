@@ -7,13 +7,14 @@ import (
 )
 
 type Config struct {
-	FirebaseConfig  *FirebaseConfig `json:"firebase_config"`
-	NgrokConfig     *NgrokConfig    `json:"ngrok_config"`
-	YoutubeDlConfig *YoutubeConfig  `json:"youtube_dl_config"`
-	ApiConfig       *ApiConfig      `json:"api_config"`
-	ViewConfig      *ViewConfig     `json:"view_config"`
-	MelonConfig     *MelonConfig    `json:"melon_config"`
-	LoggerConfig    *LoggerConfig   `json:"logger_config"`
+	FirebaseConfig     *FirebaseConfig     `json:"firebase_config"`
+	NgrokConfig        *NgrokConfig        `json:"ngrok_config"`
+	YoutubeDlConfig    *YoutubeDlConfig    `json:"youtube_dl_config"`
+	ApiConfig          *ApiConfig          `json:"api_config"`
+	ViewConfig         *ViewConfig         `json:"view_config"`
+	MelonConfig        *MelonConfig        `json:"melon_config"`
+	LoggerConfig       *LoggerConfig       `json:"logger_config"`
+	YoutubeChartConfig *YoutubeChartConfig `json:"youtube_chart_config"`
 }
 
 type FirebaseConfig struct {
@@ -25,7 +26,7 @@ type NgrokConfig struct {
 	Token string `json:"token"`
 }
 
-type YoutubeConfig struct {
+type YoutubeDlConfig struct {
 	AudioFormat  string `json:"audio_format"`
 	AudioQuality int    `json:"audio_quality"`
 }
@@ -53,6 +54,9 @@ type MelonConfig struct {
 	Folk    int `json:"folk"`
 }
 
+type YoutubeChartConfig struct {
+}
+
 type LoggerConfig struct {
 	Path string `json:"path"`
 }
@@ -76,7 +80,7 @@ func NewConfig(path string) *Config {
 			Token: viper.GetString("ngrok.token"),
 			Port:  viper.GetString("ngrok.port"),
 		},
-		YoutubeDlConfig: &YoutubeConfig{
+		YoutubeDlConfig: &YoutubeDlConfig{
 			AudioFormat:  viper.GetString("youtube_dl.audio_format"),
 			AudioQuality: viper.GetInt("youtube_dl.audio_quality"),
 		},

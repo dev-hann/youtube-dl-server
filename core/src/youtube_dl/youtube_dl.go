@@ -12,10 +12,10 @@ import (
 // AudioQuality is Between 0 (better) and 0 (worse), default 5.
 type YoutubeDL struct {
 	version string
-	config  *config.YoutubeConfig
+	config  *config.YoutubeDlConfig
 }
 
-func NewYoutubeDL(config *config.YoutubeConfig) *YoutubeDL {
+func NewYoutubeDL(config *config.YoutubeDlConfig) *YoutubeDL {
 	return &YoutubeDL{
 		version: loadVersion(),
 		config:  config,

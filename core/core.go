@@ -5,14 +5,16 @@ import (
 	"github.com/youtube-dl-server/core/src/firebase"
 	"github.com/youtube-dl-server/core/src/melon"
 	"github.com/youtube-dl-server/core/src/ngrok"
+	"github.com/youtube-dl-server/core/src/youtube_chart"
 	"github.com/youtube-dl-server/core/src/youtube_dl"
 )
 
 type Core struct {
-	config    *config.Config
-	ngrok     *ngrok.Ngrok
-	youtubeDl *youtube_dl.YoutubeDL
-	melon     *melon.Melon
+	config       *config.Config
+	ngrok        *ngrok.Ngrok
+	youtubeDl    *youtube_dl.YoutubeDL
+	melon        *melon.Melon
+	youtubeChart *youtube_chart.YoutubeChart
 }
 
 func InitCore(c *config.Config) *Core {
@@ -21,11 +23,13 @@ func InitCore(c *config.Config) *Core {
 	f := firebase.NewFirebase(c.FirebaseConfig)
 	f.UpdateNgrok(n)
 	m := melon.NewMelon(c.MelonConfig)
+	y := youtube_chart.NewYoutubeChart(c.YoutubeChartConfig)
 	return &Core{
-		config:    c,
-		ngrok:     n,
-		youtubeDl: dl,
-		melon:     m,
+		config:       c,
+		ngrok:        n,
+		youtubeDl:    dl,
+		melon:        m,
+		youtubeChart: y,
 	}
 }
 
@@ -39,4 +43,8 @@ func (c *Core) LoadConfig() interface{} {
 
 func (c *Core) LoadMelonChart() interface{} {
 	return c.melon.LoadChartList()
+}
+
+func (c *Core) LoadYoutubeChart() interface{} {
+	return c.youtubeChart.LoadYoutubeChart()
 }

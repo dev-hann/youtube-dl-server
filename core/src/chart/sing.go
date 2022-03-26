@@ -1,4 +1,4 @@
-package melon
+package chart
 
 type Sing struct {
 	Rank      string `json:"rank"`

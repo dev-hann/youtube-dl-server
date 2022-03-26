@@ -8,14 +8,14 @@ youtube_dl:
   audio_quality: 5
 melon_chart:
   top: 40
-  ballade: 10
-  dance: 1
-  hiphop: 1
-  rnb: 1
-  indie: 1
-  rock: 1
-  trot: 1
-  folk: 1
+  ballade: 0
+  dance: 0
+  hiphop: 0
+  rnb: 0
+  indie: 0
+  rock: 0
+  trot: 0
+  folk: 0
 logger:
   path: "./log"
   # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
