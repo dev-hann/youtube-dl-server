@@ -3,6 +3,7 @@ package youtube_chart
 import (
 	"encoding/json"
 	"github.com/gocolly/colly"
+	"github.com/tidwall/gjson"
 	"github.com/youtube-dl-server/config"
 	"log"
 )
@@ -30,7 +31,6 @@ func (y *YoutubeChart) LoadYoutubeChart() *YoutubeChart {
 	c.OnRequest(func(req *colly.Request) {
 		setHeader(req)
 	})
-
 	c.OnResponse(func(response *colly.Response) {
 		parsingRequest(response, res)
 	})
@@ -77,10 +77,8 @@ func setHeader(req *colly.Request) {
 
 }
 func parsingRequest(response *colly.Response, chart *YoutubeChart) {
-	var data map[string]interface{}
-	err := json.Unmarshal(response.Body, &data)
-	if err != nil {
-		log.Panicln(err)
-	}
-	log.Println(data["contents"])
+	data := response.Body
+	enterPoint := gjson.GetBytes(data, "contents.sectionListRenderer.contents.0.musicAnalyticsSectionRenderer.content")
+	log.Println(enterPoint)
+
 }
