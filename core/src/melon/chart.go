@@ -1,4 +1,4 @@
-package chart
+package melon
 
 type Chart struct {
 	Top     []*Sing `json:"top,omitempty"`

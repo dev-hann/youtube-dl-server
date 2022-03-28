@@ -3,7 +3,6 @@ package melon
 import (
 	"github.com/gocolly/colly"
 	"github.com/youtube-dl-server/config"
-	"github.com/youtube-dl-server/core/src/chart"
 	"log"
 	"strings"
 )
@@ -48,8 +47,8 @@ func NewMelon(config *config.MelonConfig) *Melon {
 		folkURL:    _FolkURL,
 	}
 }
-func (m *Melon) LoadChartList() *chart.Chart {
-	return &chart.Chart{
+func (m *Melon) LoadChartList() *Chart {
+	return &Chart{
 		Top:     m.topList(),
 		Ballade: m.balladeList(),
 		Dance:   m.danceList(),
@@ -61,38 +60,38 @@ func (m *Melon) LoadChartList() *chart.Chart {
 		Folk:    m.folkList(),
 	}
 }
-func (m *Melon) topList() []*chart.Sing {
+func (m *Melon) topList() []*Sing {
 	return parsing(m.topURL, m.config.Top)
 }
 
-func (m *Melon) balladeList() []*chart.Sing {
+func (m *Melon) balladeList() []*Sing {
 	return parsing(m.balladeURL, m.config.Ballade)
 }
 
-func (m *Melon) danceList() []*chart.Sing {
+func (m *Melon) danceList() []*Sing {
 	return parsing(m.danceURL, m.config.Dance)
 }
-func (m *Melon) hiphopList() []*chart.Sing {
+func (m *Melon) hiphopList() []*Sing {
 	return parsing(m.hiphopURL, m.config.Hiphop)
 }
-func (m *Melon) rnbList() []*chart.Sing {
+func (m *Melon) rnbList() []*Sing {
 	return parsing(m.rnbURL, m.config.Rnb)
 }
-func (m *Melon) indieList() []*chart.Sing {
+func (m *Melon) indieList() []*Sing {
 	return parsing(m.indieURL, m.config.Indie)
 }
-func (m *Melon) rockList() []*chart.Sing {
+func (m *Melon) rockList() []*Sing {
 	return parsing(m.rockURL, m.config.Rock)
 }
-func (m *Melon) trotList() []*chart.Sing {
+func (m *Melon) trotList() []*Sing {
 	return parsing(m.trotURL, m.config.Trot)
 }
-func (m *Melon) folkList() []*chart.Sing {
+func (m *Melon) folkList() []*Sing {
 	return parsing(m.balladeURL, m.config.Folk)
 }
 
-func parsing(url string, length int) []*chart.Sing {
-	var res []*chart.Sing
+func parsing(url string, length int) []*Sing {
+	var res []*Sing
 
 	if length == 0 {
 		return res
@@ -103,7 +102,7 @@ func parsing(url string, length int) []*chart.Sing {
 		if len(res) >= length {
 			return
 		}
-		var tmpSing chart.Sing
+		var tmpSing Sing
 		e.ForEach("td", func(i int, td *colly.HTMLElement) {
 			td.ForEach("div", func(i int, div *colly.HTMLElement) {
 				rank := getRank(div)

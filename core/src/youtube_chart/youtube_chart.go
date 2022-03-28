@@ -79,6 +79,7 @@ func setHeader(req *colly.Request) {
 func parsingRequest(response *colly.Response, chart *YoutubeChart) {
 	data := response.Body
 	enterPoint := gjson.GetBytes(data, "contents.sectionListRenderer.contents.0.musicAnalyticsSectionRenderer.content")
+
 	log.Println(enterPoint)
 
 }
