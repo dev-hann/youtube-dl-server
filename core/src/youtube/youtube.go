@@ -1,4 +1,4 @@
-package youtube_chart
+package youtube
 
 import (
 	"encoding/json"
@@ -12,27 +12,27 @@ const (
 	_ChartApi = "https://charts.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyCzEW7JUJdSql0-2V4tHUb6laYm4iAE_dM"
 )
 
-type YoutubeChart struct {
-	config   *config.YoutubeChartConfig
+type Youtube struct {
+	config   *config.YoutubeConfig
 	chartApi string
 }
 
-func NewYoutubeChart(config *config.YoutubeChartConfig) *YoutubeChart {
-	return &YoutubeChart{
+func NewYoutube(config *config.YoutubeConfig) *Youtube {
+	return &Youtube{
 		config:   config,
 		chartApi: _ChartApi,
 	}
 }
 
-func (y *YoutubeChart) LoadYoutubeChart() *YoutubeChart {
-	var res *YoutubeChart
+func (y *Youtube) LoadYoutubeChart() *Chart {
+	var res *Chart
 
 	c := colly.NewCollector()
 	c.OnRequest(func(req *colly.Request) {
 		setHeader(req)
 	})
 	c.OnResponse(func(response *colly.Response) {
-		parsingRequest(response, res)
+		res = y.parsingRequest(response)
 	})
 
 	data := NewPayload()
@@ -76,10 +76,37 @@ func setHeader(req *colly.Request) {
 	req.Headers.Set("Cookie", "YSC=obLgQ-1K_m0; VISITOR_INFO1_LIVE=PoKHd4kZe5g; _ga=GA1.2.1805250081.1648336179; _gid=GA1.2.1425415850.1648336179; _gat=1")
 
 }
-func parsingRequest(response *colly.Response, chart *YoutubeChart) {
+
+func (y *Youtube) parsingRequest(response *colly.Response) *Chart {
 	data := response.Body
 	enterPoint := gjson.GetBytes(data, "contents.sectionListRenderer.contents.0.musicAnalyticsSectionRenderer.content")
 
-	log.Println(enterPoint)
+	return &Chart{
+		Top: topList(&enterPoint, y.config.Top),
+	}
 
+}
+
+func topList(enterPoint *gjson.Result, length int) []*Sing {
+	var res []*Sing
+	if length == 0 {
+		return res
+	}
+	topList := enterPoint.Get("trackTypes.0.trackViews")
+	for _, item := range topList.Array() {
+		if len(res) >= length {
+			break
+		}
+		res = append(res,
+			&Sing{
+				Id:        item.Get("encryptedVideoId").String(),
+				Rank:      item.Get("chartEntryMetadata.currentPosition").String(),
+				Title:     item.Get("name").String(),
+				Artist:    item.Get("artists.0.name").String(),
+				ViewCount: item.Get("viewCount").String(),
+			},
+		)
+	}
+
+	return res
 }

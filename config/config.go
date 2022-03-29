@@ -7,14 +7,14 @@ import (
 )
 
 type Config struct {
-	FirebaseConfig     *FirebaseConfig     `json:"firebase_config"`
-	NgrokConfig        *NgrokConfig        `json:"ngrok_config"`
-	YoutubeDlConfig    *YoutubeDlConfig    `json:"youtube_dl_config"`
-	ApiConfig          *ApiConfig          `json:"api_config"`
-	ViewConfig         *ViewConfig         `json:"view_config"`
-	MelonConfig        *MelonConfig        `json:"melon_config"`
-	LoggerConfig       *LoggerConfig       `json:"logger_config"`
-	YoutubeChartConfig *YoutubeChartConfig `json:"youtube_chart_config"`
+	FirebaseConfig  *FirebaseConfig  `json:"firebase_config"`
+	NgrokConfig     *NgrokConfig     `json:"ngrok_config"`
+	YoutubeDlConfig *YoutubeDlConfig `json:"youtube_dl_config"`
+	ApiConfig       *ApiConfig       `json:"api_config"`
+	ViewConfig      *ViewConfig      `json:"view_config"`
+	MelonConfig     *MelonConfig     `json:"melon_config"`
+	LoggerConfig    *LoggerConfig    `json:"logger_config"`
+	YoutubeConfig   *YoutubeConfig   `json:"youtube_config"`
 }
 
 type FirebaseConfig struct {
@@ -32,10 +32,11 @@ type YoutubeDlConfig struct {
 }
 
 type ApiConfig struct {
-	Version   string `json:"version"`
-	ConfigApi string `json:"config_api"`
-	AudioApi  string `json:"audio_api"`
-	MelonApi  string `json:"melon_api"`
+	Version    string `json:"version"`
+	ConfigApi  string `json:"config_api"`
+	AudioApi   string `json:"audio_api"`
+	MelonApi   string `json:"melon_api"`
+	YoutubeApi string `json:"youtube_api"`
 }
 
 type ViewConfig struct {
@@ -54,7 +55,8 @@ type MelonConfig struct {
 	Folk    int `json:"folk"`
 }
 
-type YoutubeChartConfig struct {
+type YoutubeConfig struct {
+	Top int `json:"top"`
 }
 
 type LoggerConfig struct {
@@ -85,10 +87,11 @@ func NewConfig(path string) *Config {
 			AudioQuality: viper.GetInt("youtube_dl.audio_quality"),
 		},
 		ApiConfig: &ApiConfig{
-			Version:   viper.GetString("api.version"),
-			ConfigApi: viper.GetString("api.config_api"),
-			AudioApi:  viper.GetString("api.audio_api"),
-			MelonApi:  viper.GetString("api.melon_api"),
+			Version:    viper.GetString("api.version"),
+			ConfigApi:  viper.GetString("api.config_api"),
+			AudioApi:   viper.GetString("api.audio_api"),
+			MelonApi:   viper.GetString("api.melon_api"),
+			YoutubeApi: viper.GetString("api.youtube_api"),
 		},
 		ViewConfig: &ViewConfig{
 			Path: viper.GetString("view.path"),
@@ -106,6 +109,9 @@ func NewConfig(path string) *Config {
 		},
 		LoggerConfig: &LoggerConfig{
 			Path: viper.GetString("logger.path"),
+		},
+		YoutubeConfig: &YoutubeConfig{
+			Top: viper.GetInt("youtube_chart.top"),
 		},
 	}
 }

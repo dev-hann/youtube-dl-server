@@ -16,6 +16,8 @@ melon_chart:
   rock: 0
   trot: 0
   folk: 0
+youtube_chart:
+  top: 40
 logger:
   path: "./log"
   # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
@@ -25,5 +27,6 @@ api:
   audio_api: "/audio/{videoID}"
   log_api: "/logger/{page}"
   melon_api: "/melon"
+  youtube_api: "/youtube"
 view:
   path: "./view/web/"

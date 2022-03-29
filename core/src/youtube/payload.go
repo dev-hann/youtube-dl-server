@@ -1,4 +1,4 @@
-package youtube_chart
+package youtube
 
 import (
 	"encoding/json"

@@ -21,12 +21,16 @@ func InitApiHandler(r *mux.Router, config *config.ApiConfig, core *core.Core) {
 	r.HandleFunc("/"+config.Version+config.ConfigApi, configHandler).Methods("GET")
 	r.HandleFunc("/"+config.Version+config.AudioApi, audioHandler).Methods("GET")
 	r.HandleFunc("/"+config.Version+config.MelonApi, melonHandler).Methods("GET")
-	r.HandleFunc("/test", youtubeChartHandler).Methods("GET")
+	r.HandleFunc("/"+config.Version+config.YoutubeApi, youtubeChartHandler).Methods("GET")
 }
 
 func youtubeChartHandler(writer http.ResponseWriter, request *http.Request) {
-	api.core.LoadYoutubeChart()
-	fmt.Fprint(writer, "Hello")
+	y := api.core.LoadYoutubeChart()
+	res, err := json.Marshal(SuccessResponse(y))
+	if err != nil {
+		res, _ = json.Marshal(FailResponse(err))
+	}
+	fmt.Fprint(writer, string(res))
 }
 
 func initApi(config *config.ApiConfig, core *core.Core) {
