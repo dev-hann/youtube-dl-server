@@ -10,8 +10,6 @@ import (
 	"os"
 )
 
-var apiLogger *log.Entry
-
 func InitLogger(config *config.LoggerConfig) {
 	log.SetFormatter(&log.JSONFormatter{})
 	f, err := os.OpenFile(config.Path, os.O_APPEND|os.O_WRONLY, 0666)
@@ -23,16 +21,4 @@ func InitLogger(config *config.LoggerConfig) {
 	}
 	log.SetOutput(f)
 	log.Info("Init Server..")
-}
-
-func initApiLogger() {
-	apiLogger = log.WithFields(
-		log.Fields{
-
-		},
-	)
-}
-
-func Api(msg string) {
-
 }

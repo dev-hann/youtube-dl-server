@@ -3,7 +3,6 @@ package melon
 import (
 	"github.com/gocolly/colly"
 	"github.com/youtube-dl-server/config"
-	"log"
 	"strings"
 )
 
@@ -47,54 +46,92 @@ func NewMelon(config *config.MelonConfig) *Melon {
 		folkURL:    _FolkURL,
 	}
 }
-func (m *Melon) LoadChartList() *Chart {
-	return &Chart{
-		Top:     m.topList(),
-		Ballade: m.balladeList(),
-		Dance:   m.danceList(),
-		Hiphop:  m.hiphopList(),
-		Rnb:     m.rnbList(),
-		Indie:   m.indieList(),
-		Rock:    m.rockList(),
-		Trot:    m.trotList(),
-		Folk:    m.folkList(),
+func (m *Melon) LoadChartList() (*Chart, error) {
+
+	topList, err := m.trotList()
+	if err != nil {
+		return nil, err
 	}
+	balladeList, err := m.balladeList()
+	if err != nil {
+		return nil, err
+	}
+	danceList, err := m.danceList()
+	if err != nil {
+		return nil, err
+	}
+	hiphopList, err := m.hiphopList()
+	if err != nil {
+		return nil, err
+	}
+	rnbList, err := m.rnbList()
+	if err != nil {
+		return nil, err
+	}
+	indieList, err := m.indieList()
+	if err != nil {
+		return nil, err
+	}
+	rockList, err := m.rockList()
+	if err != nil {
+		return nil, err
+	}
+	trotList, err := m.trotList()
+	if err != nil {
+		return nil, err
+	}
+	folkList, err := m.folkList()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Chart{
+		Top:     topList,
+		Ballade: balladeList,
+		Dance:   danceList,
+		Hiphop:  hiphopList,
+		Rnb:     rnbList,
+		Indie:   indieList,
+		Rock:    rockList,
+		Trot:    trotList,
+		Folk:    folkList,
+	}, nil
 }
-func (m *Melon) topList() []*Sing {
+func (m *Melon) topList() ([]*Sing, error) {
 	return parsing(m.topURL, m.config.Top)
 }
 
-func (m *Melon) balladeList() []*Sing {
+func (m *Melon) balladeList() ([]*Sing, error) {
 	return parsing(m.balladeURL, m.config.Ballade)
 }
 
-func (m *Melon) danceList() []*Sing {
+func (m *Melon) danceList() ([]*Sing, error) {
 	return parsing(m.danceURL, m.config.Dance)
 }
-func (m *Melon) hiphopList() []*Sing {
+func (m *Melon) hiphopList() ([]*Sing, error) {
 	return parsing(m.hiphopURL, m.config.Hiphop)
 }
-func (m *Melon) rnbList() []*Sing {
+func (m *Melon) rnbList() ([]*Sing, error) {
 	return parsing(m.rnbURL, m.config.Rnb)
 }
-func (m *Melon) indieList() []*Sing {
+func (m *Melon) indieList() ([]*Sing, error) {
 	return parsing(m.indieURL, m.config.Indie)
 }
-func (m *Melon) rockList() []*Sing {
+func (m *Melon) rockList() ([]*Sing, error) {
 	return parsing(m.rockURL, m.config.Rock)
 }
-func (m *Melon) trotList() []*Sing {
+func (m *Melon) trotList() ([]*Sing, error) {
 	return parsing(m.trotURL, m.config.Trot)
 }
-func (m *Melon) folkList() []*Sing {
+func (m *Melon) folkList() ([]*Sing, error) {
 	return parsing(m.balladeURL, m.config.Folk)
 }
 
-func parsing(url string, length int) []*Sing {
+func parsing(url string, length int) ([]*Sing, error) {
 	var res []*Sing
 
 	if length == 0 {
-		return res
+		return res, nil
 	}
 
 	c := colly.NewCollector()
@@ -136,9 +173,9 @@ func parsing(url string, length int) []*Sing {
 	})
 	err := c.Visit(url)
 	if err != nil {
-		log.Panicln(err)
+		return nil, err
 	}
-	return res
+	return res, nil
 
 }
 

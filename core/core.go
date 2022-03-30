@@ -41,10 +41,10 @@ func (c *Core) LoadConfig() interface{} {
 	return c.config
 }
 
-func (c *Core) LoadMelonChart() interface{} {
+func (c *Core) LoadMelonChart() (interface{}, error) {
 	return c.melon.LoadChartList()
 }
 
-func (c *Core) LoadYoutubeChart() interface{} {
+func (c *Core) LoadYoutubeChart() (interface{}, error) {
 	return c.youtubeChart.LoadYoutubeChart()
 }

@@ -20,6 +20,7 @@ youtube_chart:
   top: 40
 logger:
   path: "./log"
+
   # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
 api:
   version: "v1"

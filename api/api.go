@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 	"github.com/youtube-dl-server/config"
 	"github.com/youtube-dl-server/core"
 	"net/http"
@@ -15,6 +16,21 @@ type Api struct {
 }
 
 var api *Api
+var err error
+var logger *log.Entry
+
+func logError() {
+	if err != nil {
+		logger.Error(err)
+	}
+}
+
+func initApi(config *config.ApiConfig, core *core.Core) {
+	api = &Api{
+		config: config,
+		core:   core,
+	}
+}
 
 func InitApiHandler(r *mux.Router, config *config.ApiConfig, core *core.Core) {
 	initApi(config, core)
@@ -33,15 +49,9 @@ func youtubeChartHandler(writer http.ResponseWriter, request *http.Request) {
 	fmt.Fprint(writer, string(res))
 }
 
-func initApi(config *config.ApiConfig, core *core.Core) {
-	api = &Api{
-		config: config,
-		core:   core,
-	}
-}
-
 func melonHandler(writer http.ResponseWriter, request *http.Request) {
-	m := api.core.LoadMelonChart()
+	m, err := api.core.LoadMelonChart()
+
 	res, err := json.Marshal(SuccessResponse(m))
 	if err != nil {
 		res, _ = json.Marshal(FailResponse(err))

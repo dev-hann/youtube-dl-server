@@ -1,11 +1,13 @@
 package youtube
 
+// * Future
+// add func parsing artist & videos
+
 import (
 	"encoding/json"
 	"github.com/gocolly/colly"
 	"github.com/tidwall/gjson"
 	"github.com/youtube-dl-server/config"
-	"log"
 )
 
 const (
@@ -24,7 +26,7 @@ func NewYoutube(config *config.YoutubeConfig) *Youtube {
 	}
 }
 
-func (y *Youtube) LoadYoutubeChart() *Chart {
+func (y *Youtube) LoadYoutubeChart() (*Chart, error) {
 	var res *Chart
 
 	c := colly.NewCollector()
@@ -38,13 +40,13 @@ func (y *Youtube) LoadYoutubeChart() *Chart {
 	data := NewPayload()
 	payloadBytes, err := json.Marshal(data)
 	if err != nil {
-		log.Panicln(err)
+		return nil, err
 	}
 	err = c.PostRaw(y.chartApi, payloadBytes)
 	if err != nil {
-		log.Panicln(err)
+		return nil, err
 	}
-	return res
+	return res, nil
 }
 
 func setHeader(req *colly.Request) {
