@@ -19,13 +19,30 @@ var api *Api
 var err error
 var logger *log.Entry
 
-func logError() {
+func initLogger() {
+	logger = log.WithFields(
+		log.Fields{
+			"Field": "Api",
+		},
+	)
+}
+
+func callApi(request *http.Request) {
+	logger.WithFields(
+		log.Fields{
+			"userAgent": request.UserAgent(),
+		},
+	).Info(request.URL.String())
+}
+func checkError() {
 	if err != nil {
 		logger.Error(err)
 	}
+	err = nil
 }
 
 func initApi(config *config.ApiConfig, core *core.Core) {
+	initLogger()
 	api = &Api{
 		config: config,
 		core:   core,
@@ -41,46 +58,59 @@ func InitApiHandler(r *mux.Router, config *config.ApiConfig, core *core.Core) {
 }
 
 func youtubeChartHandler(writer http.ResponseWriter, request *http.Request) {
-	y := api.core.LoadYoutubeChart()
-	res, err := json.Marshal(SuccessResponse(y))
-	if err != nil {
-		res, _ = json.Marshal(FailResponse(err))
-	}
-	fmt.Fprint(writer, string(res))
+	callApi(request)
+	var res interface{}
+	res, err = api.core.LoadYoutubeChart()
+	checkError()
+	responseData(writer, res)
 }
 
 func melonHandler(writer http.ResponseWriter, request *http.Request) {
-	m, err := api.core.LoadMelonChart()
+	callApi(request)
 
-	res, err := json.Marshal(SuccessResponse(m))
-	if err != nil {
-		res, _ = json.Marshal(FailResponse(err))
-	}
-	fmt.Fprint(writer, string(res))
+	var res interface{}
+	res, err = api.core.LoadMelonChart()
+	checkError()
+	responseData(writer, res)
 }
 
 func configHandler(writer http.ResponseWriter, request *http.Request) {
-	data := api.core.LoadConfig()
-	res, err := json.Marshal(SuccessResponse(data))
-	if err != nil {
-		res, _ = json.Marshal(FailResponse(err))
-	}
-	fmt.Fprint(writer, string(res))
-
+	callApi(request)
+	res := api.core.LoadConfig()
+	responseData(writer, res)
 }
 
 func audioHandler(writer http.ResponseWriter, request *http.Request) {
+	callApi(request)
 	vars := mux.Vars(request)
 	url := vars["videoID"]
-	dlData, err := api.core.LoadAudioURL(url)
-	dlURL := string(dlData)
-	var res *Response
+	var res []byte
+	res, err = api.core.LoadAudioURL(url)
+	checkError()
+	responseData(writer, res)
+
+	//dlURL := string(dlData)
+	//fmt.Println(dlURL)
+	//var res *Response
+	//if err != nil {
+	//	res = FailResponse(dlURL)
+	//} else {
+	//	res = SuccessResponse(dlURL)
+	//}
+	//e := json.NewEncoder(writer)
+	//e.SetEscapeHTML(false)
+	//e.Encode(res)
+}
+
+func responseData(writer http.ResponseWriter, response interface{}) {
+	var res []byte
+	res, err = json.Marshal(SuccessResponse(response))
+	checkError()
 	if err != nil {
-		res = FailResponse(dlURL)
-	} else {
-		res = SuccessResponse(dlURL)
+		res, err = json.Marshal(FailResponse(err))
+		checkError()
 	}
-	e := json.NewEncoder(writer)
-	e.SetEscapeHTML(false)
-	e.Encode(res)
+	_, err = fmt.Fprint(writer, string(res))
+	checkError()
+
 }
