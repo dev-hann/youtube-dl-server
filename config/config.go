@@ -21,6 +21,7 @@ type YoutubeDlConfig struct {
 }
 
 type ApiConfig struct {
+	Port       string `json:"port"`
 	Version    string `json:"version"`
 	ConfigApi  string `json:"config_api"`
 	AudioApi   string `json:"audio_api"`
@@ -69,6 +70,7 @@ func NewConfig(path string) *Config {
 			AudioQuality: viper.GetInt("youtube_dl.audio_quality"),
 		},
 		ApiConfig: &ApiConfig{
+			Port:       viper.GetString("api.port"),
 			Version:    viper.GetString("api.version"),
 			ConfigApi:  viper.GetString("api.config_api"),
 			AudioApi:   viper.GetString("api.audio_api"),

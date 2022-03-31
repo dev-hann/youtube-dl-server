@@ -8,7 +8,6 @@ import (
 )
 
 //https://github.com/ytdl-org/youtube-dl
-
 // AudioQuality is Between 0 (better) and 0 (worse), default 5.
 type YoutubeDL struct {
 	version string

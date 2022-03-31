@@ -48,39 +48,39 @@ func NewMelon(config *config.MelonConfig) *Melon {
 }
 func (m *Melon) LoadChartList() (*Chart, error) {
 
-	topList, err := m.trotList()
+	topList, err := parsing(m.topURL, m.config.Top)
 	if err != nil {
 		return nil, err
 	}
-	balladeList, err := m.balladeList()
+	balladeList, err := parsing(m.balladeURL, m.config.Ballade)
 	if err != nil {
 		return nil, err
 	}
-	danceList, err := m.danceList()
+	danceList, err := parsing(m.danceURL, m.config.Dance)
 	if err != nil {
 		return nil, err
 	}
-	hiphopList, err := m.hiphopList()
+	hiphopList, err := parsing(m.hiphopURL, m.config.Hiphop)
 	if err != nil {
 		return nil, err
 	}
-	rnbList, err := m.rnbList()
+	rnbList, err := parsing(m.rnbURL, m.config.Rnb)
 	if err != nil {
 		return nil, err
 	}
-	indieList, err := m.indieList()
+	indieList, err := parsing(m.indieURL, m.config.Indie)
 	if err != nil {
 		return nil, err
 	}
-	rockList, err := m.rockList()
+	rockList, err := parsing(m.rockURL, m.config.Rock)
 	if err != nil {
 		return nil, err
 	}
-	trotList, err := m.trotList()
+	trotList, err := parsing(m.trotURL, m.config.Trot)
 	if err != nil {
 		return nil, err
 	}
-	folkList, err := m.folkList()
+	folkList, err := parsing(m.balladeURL, m.config.Folk)
 	if err != nil {
 		return nil, err
 	}
@@ -96,35 +96,6 @@ func (m *Melon) LoadChartList() (*Chart, error) {
 		Trot:    trotList,
 		Folk:    folkList,
 	}, nil
-}
-func (m *Melon) topList() ([]*Sing, error) {
-	return parsing(m.topURL, m.config.Top)
-}
-
-func (m *Melon) balladeList() ([]*Sing, error) {
-	return parsing(m.balladeURL, m.config.Ballade)
-}
-
-func (m *Melon) danceList() ([]*Sing, error) {
-	return parsing(m.danceURL, m.config.Dance)
-}
-func (m *Melon) hiphopList() ([]*Sing, error) {
-	return parsing(m.hiphopURL, m.config.Hiphop)
-}
-func (m *Melon) rnbList() ([]*Sing, error) {
-	return parsing(m.rnbURL, m.config.Rnb)
-}
-func (m *Melon) indieList() ([]*Sing, error) {
-	return parsing(m.indieURL, m.config.Indie)
-}
-func (m *Melon) rockList() ([]*Sing, error) {
-	return parsing(m.rockURL, m.config.Rock)
-}
-func (m *Melon) trotList() ([]*Sing, error) {
-	return parsing(m.trotURL, m.config.Trot)
-}
-func (m *Melon) folkList() ([]*Sing, error) {
-	return parsing(m.balladeURL, m.config.Folk)
 }
 
 func parsing(url string, length int) ([]*Sing, error) {

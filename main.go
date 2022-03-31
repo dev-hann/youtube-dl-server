@@ -18,7 +18,6 @@ func main() {
 	r := mux.NewRouter()
 	api.InitApiHandler(r, c.ApiConfig, appCore)
 	view.InitView(r, c.ViewConfig)
-
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":"+c.NgrokConfig.Port, nil))
+	log.Fatal(http.ListenAndServe(":"+c.ApiConfig.Port, nil))
 }

@@ -67,7 +67,6 @@ func youtubeChartHandler(writer http.ResponseWriter, request *http.Request) {
 
 func melonHandler(writer http.ResponseWriter, request *http.Request) {
 	callApi(request)
-
 	var res interface{}
 	res, err = api.core.LoadMelonChart()
 	checkError()

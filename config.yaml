@@ -1,3 +1,11 @@
+api:
+  port: "8444"
+  version: "v1"
+  config_api: "/config"
+  audio_api: "/audio/{videoID}"
+  log_api: "/log/{page}"
+  melon_api: "/melon"
+  youtube_api: "/youtube"
 youtube_dl:
   audio_format: "mp3"
   audio_quality: 5
@@ -16,13 +24,6 @@ youtube_chart:
 logger:
   path: "./log"
 
-  # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
-api:
-  version: "v1"
-  config_api: "/config"
-  audio_api: "/audio/{videoID}"
-  log_api: "/logger/{page}"
-  melon_api: "/melon"
-  youtube_api: "/youtube"
+
 view:
   path: "./view/web/"
