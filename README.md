@@ -17,7 +17,7 @@ youtube_dl:
   audio_format: "mp3"
   audio_quality: 5
 
-  # Api Url created like : http://localhost:{ngrok.port}/{api.version}/{api_name}
+# http://localhost:{ngrok.port}/{api.version}/{api_name}
 api:
   version: "v1"
   config_api: "/config"
