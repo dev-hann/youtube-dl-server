@@ -2,16 +2,13 @@ package core
 
 import (
 	"github.com/youtube-dl-server/config"
-	"github.com/youtube-dl-server/core/src/firebase"
 	"github.com/youtube-dl-server/core/src/melon"
-	"github.com/youtube-dl-server/core/src/ngrok"
 	"github.com/youtube-dl-server/core/src/youtube"
 	"github.com/youtube-dl-server/core/src/youtube_dl"
 )
 
 type Core struct {
 	config       *config.Config
-	ngrok        *ngrok.Ngrok
 	youtubeDl    *youtube_dl.YoutubeDL
 	melon        *melon.Melon
 	youtubeChart *youtube.Youtube
@@ -19,14 +16,10 @@ type Core struct {
 
 func InitCore(c *config.Config) *Core {
 	dl := youtube_dl.NewYoutubeDL(c.YoutubeDlConfig)
-	n := ngrok.NewNgrok(c.NgrokConfig)
-	f := firebase.NewFirebase(c.FirebaseConfig)
-	f.UpdateNgrok(n)
 	m := melon.NewMelon(c.MelonConfig)
 	y := youtube.NewYoutube(c.YoutubeConfig)
 	return &Core{
 		config:       c,
-		ngrok:        n,
 		youtubeDl:    dl,
 		melon:        m,
 		youtubeChart: y,

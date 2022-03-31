@@ -7,23 +7,12 @@ import (
 )
 
 type Config struct {
-	FirebaseConfig  *FirebaseConfig  `json:"firebase_config"`
-	NgrokConfig     *NgrokConfig     `json:"ngrok_config"`
 	YoutubeDlConfig *YoutubeDlConfig `json:"youtube_dl_config"`
 	ApiConfig       *ApiConfig       `json:"api_config"`
 	ViewConfig      *ViewConfig      `json:"view_config"`
 	MelonConfig     *MelonConfig     `json:"melon_config"`
 	LoggerConfig    *LoggerConfig    `json:"logger_config"`
 	YoutubeConfig   *YoutubeConfig   `json:"youtube_config"`
-}
-
-type FirebaseConfig struct {
-	TokenPath string `json:"token_path"`
-}
-
-type NgrokConfig struct {
-	Port  string `json:"port"`
-	Token string `json:"token"`
 }
 
 type YoutubeDlConfig struct {
@@ -75,13 +64,6 @@ func NewConfig(path string) *Config {
 		log.Panicln(err)
 	}
 	return &Config{
-		FirebaseConfig: &FirebaseConfig{
-			TokenPath: viper.GetString("firebase.token_path"),
-		},
-		NgrokConfig: &NgrokConfig{
-			Token: viper.GetString("ngrok.token"),
-			Port:  viper.GetString("ngrok.port"),
-		},
 		YoutubeDlConfig: &YoutubeDlConfig{
 			AudioFormat:  viper.GetString("youtube_dl.audio_format"),
 			AudioQuality: viper.GetInt("youtube_dl.audio_quality"),
@@ -115,5 +97,3 @@ func NewConfig(path string) *Config {
 		},
 	}
 }
-
-
