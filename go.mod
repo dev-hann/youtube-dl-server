@@ -9,6 +9,8 @@ require (
 	github.com/spf13/viper v1.10.1
 )
 
+require github.com/gorilla/websocket v1.5.0 // indirect
+
 require (
 	cloud.google.com/go v0.100.2 // indirect
 	cloud.google.com/go/compute v1.5.0 // indirect

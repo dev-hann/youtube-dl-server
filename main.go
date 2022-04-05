@@ -8,6 +8,7 @@ import (
 	"github.com/youtube-dl-server/core"
 	"github.com/youtube-dl-server/logger"
 	"github.com/youtube-dl-server/view"
+	"github.com/youtube-dl-server/view/socket"
 	"net/http"
 )
 
@@ -19,5 +20,7 @@ func main() {
 	api.InitApiHandler(r, c.ApiConfig, appCore)
 	view.InitView(r, c.ViewConfig)
 	http.Handle("/", r)
+	socket.InitWebSocket()
 	log.Fatal(http.ListenAndServe(":"+c.ApiConfig.Port, nil))
+
 }

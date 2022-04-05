@@ -1,5 +1,5 @@
 api:
-  port: "8444"
+  port: "8449"
   version: "v1"
   config_api: "/config"
   audio_api: "/audio/{videoID}"
