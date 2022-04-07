@@ -17,7 +17,7 @@ var upgrader = websocket.Upgrader{
 func InitWebSocket() {
 	go func() {
 		http.HandleFunc("/socket", handler)
-		log.Fatal(http.ListenAndServe(":9999", nil))
+		log.Fatal(http.ListenAndServe(":8888", nil))
 	}()
 }
 
