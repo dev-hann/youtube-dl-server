@@ -2,6 +2,7 @@ package socket
 
 import (
 	"github.com/gorilla/websocket"
+	"github.com/youtube-dl-server/core"
 	"log"
 	"net/http"
 )
@@ -13,11 +14,13 @@ var upgrader = websocket.Upgrader{
 		return true
 	},
 }
+var c *core.Core
 
-func InitWebSocket() {
+func InitWebSocket(core *core.Core) {
+	c = core
 	go func() {
 		http.HandleFunc("/socket", handler)
-		log.Fatal(http.ListenAndServe(":9999", nil))
+		log.Fatal(http.ListenAndServe(":8888", nil))
 	}()
 }
 
@@ -27,8 +30,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	log.Println("Hello")
-	err = conn.WriteJSON("Hello")
+	log.Println("HEllo")
+	conn.WriteMessage(0, []byte("Hello"))
+	err = conn.WriteJSON(
+		Response{
+			TypeIndex: 0,
+			Data:      c.LoadConfig(),
+		},
+	)
 	if err != nil {
 		log.Println(err)
 		return

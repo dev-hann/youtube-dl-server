@@ -20,7 +20,7 @@ func main() {
 	api.InitApiHandler(r, c.ApiConfig, appCore)
 	view.InitView(r, c.ViewConfig)
 	http.Handle("/", r)
-	socket.InitWebSocket()
+	socket.InitWebSocket(appCore)
 	log.Fatal(http.ListenAndServe(":"+c.ApiConfig.Port, nil))
 
 }
