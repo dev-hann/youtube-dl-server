@@ -1,6 +1,7 @@
 package command
 
 import (
+	"flag"
 	"github.com/youtube-dl-server/command/argument"
 	"github.com/youtube-dl-server/command/option"
 )
@@ -11,8 +12,14 @@ type Command struct {
 }
 
 func InitCommand() *Command {
+
 	return &Command{
 		option:   option.InitOption(),
 		argument: argument.InitArgument(),
 	}
+}
+
+func (c *Command) Parse() {
+	flag.Parse()
+
 }
