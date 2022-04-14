@@ -10,9 +10,9 @@ const Version = "v.1.0.0"
 const git = "https://github.com/yoehwan/youtube-dl-server.git"
 const Logo = "YOUTUBEDLSERVER"
 
-type Upgrade struct{}
+type Upgrader struct{}
 
-func (u *Upgrade) Do() {
+func (u *Upgrader) Do() {
 	res, needUpgrade := checkVersion()
 	fmt.Fprintln(os.Stdout, string(res))
 	if needUpgrade {
