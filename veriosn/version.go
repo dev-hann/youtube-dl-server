@@ -1,41 +1,22 @@
-package argument
+package veriosn
 
 import (
-	"fmt"
-	"os"
 	"os/exec"
 )
 
-const Version = "v.1.0.0"
+const _Version = "v.1.0.0"
 const git = "https://github.com/yoehwan/youtube-dl-server.git"
-const Logo = "YOUTUBEDLSERVER"
 
-type Upgrader struct{}
+type Version struct{}
 
-func (u *Upgrader) Do() {
-	res, needUpgrade := checkVersion()
-	fmt.Fprintln(os.Stdout, string(res))
-	if needUpgrade {
-		showLogo()
-		res, err := pullNewVersion()
-		if err != nil {
-			fmt.Fprintln(os.Stdout, string(res))
-			return
-		}
-		res, err = build()
-		if err != nil {
-			fmt.Fprintln(os.Stdout, string(res))
-			return
-		}
-		u.Do()
-	} else {
-		fmt.Fprintln(os.Stdout, "Current Version is already Newest.")
-		printVersion()
-	}
-
+func InitVersion() *Version {
+	return &Version{}
 }
 
-func checkVersion() ([]byte, bool) {
+func (v *Version) CurrentVersion() string {
+	return _Version
+}
+func (v *Version) CheckVersion() ([]byte, bool) {
 	data, err := command("git", "fetch")
 	if err != nil {
 		return data, false
@@ -52,22 +33,12 @@ func checkVersion() ([]byte, bool) {
 	return nil, string(remote) == string(local)
 }
 
-func showLogo() {
-	fmt.Fprintln(os.Stdout, Logo)
-
-}
-
-func printVersion() {
-	fmt.Fprintln(os.Stdout, "Version : "+Version)
-
-}
-
-func pullNewVersion() ([]byte, error) {
+func (v *Version) PullNewVersion() ([]byte, error) {
 	return command("git", "pull")
 
 }
 
-func build() ([]byte, error) {
+func (v *Version) Build() ([]byte, error) {
 	return command("go", "build", ".")
 }
 

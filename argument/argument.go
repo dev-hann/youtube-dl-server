@@ -1,26 +1,22 @@
-package command
+package argument
 
 import (
 	"flag"
-	"github.com/youtube-dl-server/command/argument"
-	"github.com/youtube-dl-server/command/option"
 	"github.com/youtube-dl-server/err"
 )
 
-type Command struct {
-	option   *option.Option
-	argument *argument.Argument
-	args     []string
+type Argument struct {
+	console *Console
+	args    []string
 }
 
-func InitCommand() *Command {
-	return &Command{
-		option:   option.InitOption(),
-		argument: argument.InitArgument(),
+func InitCommand() *Argument {
+	return &Argument{
+		console: InitConsole(),
 	}
 }
 
-func (c *Command) Parse() error {
+func (c *Argument) Parse() error {
 	flag.Parse()
 	c.args = flag.Args()
 	if len(c.args) == 0 {
@@ -29,9 +25,9 @@ func (c *Command) Parse() error {
 	return nil
 }
 
-func (c *Command) Run(
-	startFunc func(configPath string),
-	upgradeFunc func(),
+func (c *Argument) Run(
+	startFunc func(configPath string, console *Console),
+	upgradeFunc func(console *Console),
 ) {
 
 }
