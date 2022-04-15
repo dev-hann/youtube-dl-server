@@ -7,11 +7,13 @@ import (
 
 type Argument struct {
 	console *Console
+	Option  *Option
 	args    []string
 }
 
-func InitCommand() *Argument {
+func InitArgument() *Argument {
 	return &Argument{
+		Option:  InitOption(),
 		console: InitConsole(),
 	}
 }
@@ -28,6 +30,19 @@ func (c *Argument) Parse() error {
 func (c *Argument) Run(
 	startFunc func(configPath string, console *Console),
 	upgradeFunc func(console *Console),
+	versionFunc func(console *Console),
 ) {
-
+	console := c.console
+	arg := c.args[0]
+	switch arg {
+	case "start":
+		startFunc(c.Option.config, console)
+		break
+	case "upgrade":
+		upgradeFunc(console)
+		break
+	case "version":
+		versionFunc(console)
+		break
+	}
 }

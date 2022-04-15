@@ -1,6 +1,7 @@
 package argument
 
 import (
+	"fmt"
 	"io"
 	"os"
 )
@@ -18,9 +19,9 @@ func InitConsole() *Console {
 }
 
 func (c *Console) Log(message ...any) {
-
+	fmt.Fprintln(os.Stdout, message)
 }
 
 func (c *Console) ShowLogo() {
-
+	c.Log(Logo)
 }

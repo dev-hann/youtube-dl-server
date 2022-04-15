@@ -177,3 +177,4 @@
 {"level":"fatal","msg":"listen tcp :8444: bind: address already in use","time":"2022-04-09T14:00:25+08:00"}
 {"level":"info","msg":"Init Server..","time":"2022-04-09T14:04:02+08:00"}
 {"level":"info","msg":"Init Server..","time":"2022-04-12T08:22:43+08:00"}
+{"level":"info","msg":"Init Server..","time":"2022-04-15T07:52:25+08:00"}

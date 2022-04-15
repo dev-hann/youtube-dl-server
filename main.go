@@ -16,21 +16,22 @@ import (
 
 func main() {
 
-	arg := argument.InitCommand()
+	arg := argument.InitArgument()
 	err := arg.Parse()
 	if err != nil {
 		log.Print(err)
+		return
 	}
 
 	arg.Run(
 		startServer,
 		upgradeServer,
+		versionServer,
 	)
 }
 
 func startServer(configPath string, console *argument.Console) {
-	c := config.NewConfig("./config.yaml")
-	//c := config.NewConfig(configPath)
+	c := config.NewConfig(configPath)
 	logger.InitLogger(c.LoggerConfig)
 	appCore := core.InitCore(c)
 	r := mux.NewRouter()
@@ -63,9 +64,14 @@ func upgradeServer(console *argument.Console) {
 				return
 			}
 		} else {
-			console.Log("Current Version is already Newest.")
-			console.Log(v.CurrentVersion())
+			console.Log("Current Version is already Newest. " + v.CurrentVersion())
 		}
 	}
 
+}
+
+func versionServer(console *argument.Console) {
+	v := veriosn.InitVersion()
+	console.ShowLogo()
+	console.Log(v.CurrentVersion())
 }

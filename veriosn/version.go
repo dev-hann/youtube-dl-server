@@ -30,7 +30,7 @@ func (v *Version) CheckVersion() ([]byte, bool) {
 	if err != nil {
 		return data, false
 	}
-	return nil, string(remote) == string(local)
+	return nil, string(remote) != string(local)
 }
 
 func (v *Version) PullNewVersion() ([]byte, error) {
