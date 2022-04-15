@@ -18,6 +18,7 @@ func InitArgument() *Argument {
 	}
 }
 
+/// Use Cobra
 func (c *Argument) Parse() error {
 	flag.Parse()
 	c.args = flag.Args()
