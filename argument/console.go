@@ -20,9 +20,13 @@ func InitConsole() *Console {
 
 // Log make separate 'log','info',debug'..
 func (c *Console) Log(message ...any) {
-	fmt.Fprintln(os.Stdout, message)
+	fmt.Fprintln(c.writer, message)
 }
 
 func (c *Console) ShowLogo() {
 	c.Log(Logo)
+}
+
+func (c *Console) ServerInit() {
+	c.Log("Init Server Message")
 }

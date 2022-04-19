@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/youtube-dl-server/api"
 	"github.com/youtube-dl-server/argument"
@@ -10,8 +13,6 @@ import (
 	"github.com/youtube-dl-server/veriosn"
 	"github.com/youtube-dl-server/view"
 	"github.com/youtube-dl-server/view/socket"
-	"log"
-	"net/http"
 )
 
 func main() {
@@ -31,6 +32,8 @@ func main() {
 }
 
 func startServer(configPath string, console *argument.Console) {
+	console.ShowLogo()
+	console.ServerInit()
 	c := config.NewConfig(configPath)
 	logger.InitLogger(c.LoggerConfig)
 	appCore := core.InitCore(c)
