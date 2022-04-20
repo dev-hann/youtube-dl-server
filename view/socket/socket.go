@@ -1,10 +1,18 @@
 package socket
 
 import (
-	"github.com/gorilla/websocket"
-	"github.com/youtube-dl-server/core"
+	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/websocket"
+	"github.com/youtube-dl-server/core"
+)
+
+const (
+	TypeConfig = iota
+	TypeLog
+	TypeState
 )
 
 var upgrader = websocket.Upgrader{
@@ -30,8 +38,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	log.Println("HEllo")
-	conn.WriteMessage(0, []byte("Hello"))
+
+	go requestHandler(conn)
+
 	err = conn.WriteJSON(
 		Response{
 			TypeIndex: 0,
@@ -43,4 +52,22 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func requestHandler(conn *websocket.Conn) {
+	_, data, err := conn.ReadMessage()
+	if err != nil {
+		log.Println("Bad Request" + string(data))
+		log.Println(err)
+	}
+	log.Println(string(data))
+}
+
+func configMessage() ([]byte, error) {
+	res := &Response{
+		TypeIndex: TypeConfig,
+		Data:      c.LoadConfig(),
+	}
+
+	return json.Marshal(res)
 }
