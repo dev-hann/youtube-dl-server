@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gorilla/mux"
 	"github.com/youtube-dl-server/api"
@@ -16,7 +19,9 @@ import (
 )
 
 func main() {
-
+	interrupChan := make(chan os.Signal)
+	signal.Notify(interrupChan, syscall.SIGINT, syscall.SIGKILL, syscall.SIGTSTP)
+	go interruptHandler(interrupChan)
 	arg := argument.InitArgument()
 	err := arg.Parse()
 	if err != nil {
@@ -29,6 +34,15 @@ func main() {
 		upgradeServer,
 		versionServer,
 	)
+}
+
+func interruptHandler(c chan os.Signal) {
+	select {
+	case sig := <-c:
+		log.Println(sig)
+		os.Exit(1)
+
+	}
 }
 
 func startServer(configPath string, console *argument.Console) {
