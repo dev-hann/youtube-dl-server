@@ -7,12 +7,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/youtube-dl-server/core"
-)
-
-const (
-	TypeConfig = iota
-	TypeLog
-	TypeState
+	errors "github.com/youtube-dl-server/err"
 )
 
 var upgrader = websocket.Upgrader{
@@ -41,12 +36,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	go requestHandler(conn)
 
-	err = conn.WriteJSON(
-		Response{
-			TypeIndex: 0,
-			Data:      c.LoadConfig(),
-		},
-	)
 	if err != nil {
 		log.Println(err)
 		return
@@ -57,17 +46,30 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func requestHandler(conn *websocket.Conn) {
 	_, data, err := conn.ReadMessage()
 	if err != nil {
-		log.Println("Bad Request" + string(data))
+		log.Println(errors.BadRequest)
 		log.Println(err)
 	}
-	log.Println(string(data))
+	var req Request
+	err = json.Unmarshal([]byte(data), &req)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	switch req.Type {
+	case TypeConfig:
+		err := conn.WriteJSON(configMessage())
+		if err != nil {
+			log.Println(err)
+		}
+		break
+
+	}
 }
 
-func configMessage() ([]byte, error) {
-	res := &Response{
+func configMessage() *Response {
+	return &Response{
 		TypeIndex: TypeConfig,
 		Data:      c.LoadConfig(),
 	}
 
-	return json.Marshal(res)
 }

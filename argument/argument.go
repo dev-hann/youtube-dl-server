@@ -2,6 +2,7 @@ package argument
 
 import (
 	"flag"
+
 	"github.com/youtube-dl-server/err"
 )
 

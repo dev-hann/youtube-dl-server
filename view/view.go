@@ -1,9 +1,10 @@
 package view
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/youtube-dl-server/config"
-	"net/http"
 )
 
 func InitView(r *mux.Router, config *config.ViewConfig) {
