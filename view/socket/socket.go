@@ -10,6 +10,11 @@ import (
 	errors "github.com/youtube-dl-server/err"
 )
 
+type Socket struct {
+	conn *websocket.Conn
+	core *core.Core
+}
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
@@ -17,59 +22,103 @@ var upgrader = websocket.Upgrader{
 		return true
 	},
 }
-var c *core.Core
 
-func InitWebSocket(core *core.Core) {
-	c = core
-	go func() {
-		http.HandleFunc("/socket", handler)
-		log.Fatal(http.ListenAndServe(":8888", nil))
-	}()
+func InitWebSocket(core *core.Core) *Socket {
+	s := newSocket(core)
+	go s.initHandler()
+	return s
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func newSocket(c *core.Core) *Socket {
+	s := &Socket{
+		core: c,
+	}
+	return s
+}
+
+func (s *Socket) initHandler() {
+	http.HandleFunc("/socket", s.handler)
+	log.Fatal(http.ListenAndServe(":8888", nil))
+}
+
+func (s *Socket) handler(w http.ResponseWriter, r *http.Request) {
+	conn, err := s.initConnection(w, r)
+	if err != nil {
+		log.Println(err)
+	}
+	go s.initRequestHandler(conn)
+}
+
+func (s *Socket) initConnection(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
-		return
+		return nil, err
 	}
-
-	go requestHandler(conn)
-
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
+	s.conn = conn
+	return conn, nil
 }
 
-func requestHandler(conn *websocket.Conn) {
-	_, data, err := conn.ReadMessage()
-	if err != nil {
-		log.Println(errors.BadRequest)
-		log.Println(err)
-	}
-	var req Request
-	err = json.Unmarshal([]byte(data), &req)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	switch req.Type {
-	case TypeConfig:
-		err := conn.WriteJSON(configMessage())
+func (s *Socket) initRequestHandler(conn *websocket.Conn) {
+	for true {
+		_, data, err := conn.ReadMessage()
 		if err != nil {
+			log.Println(errors.BadRequest)
 			log.Println(err)
 		}
-		break
+		var req Request
+		err = json.Unmarshal([]byte(data), &req)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		switch req.Type {
+		case TypeConfig:
+			err := conn.WriteJSON(s.configMessage())
+			if err != nil {
+				log.Println(err)
+			}
+			break
+		case TypeLog:
+			err := conn.WriteJSON(s.logMessage())
+			if err != nil {
+				log.Println(err)
+			}
+			break
+		case TypeState:
+			err := conn.WriteJSON(s.stateMessage())
+			if err != nil {
+				log.Println(err)
+			}
+			break
+		}
+	}
 
+}
+func (s *Socket) configMessage() *Response {
+	return &Response{
+		Type: TypeConfig,
+		Data: s.core.LoadConfig(),
 	}
 }
 
-func configMessage() *Response {
+func (s *Socket) logMessage() *Response {
 	return &Response{
-		TypeIndex: TypeConfig,
-		Data:      c.LoadConfig(),
+		Type: TypeLog,
+		Data: "",
 	}
+}
 
+func (s *Socket) stateMessage() *Response {
+	return &Response{
+		Type: TypeState,
+		Data: "",
+	}
+}
+
+func (s *Socket) NewMessage(messsage interface{}) error {
+	err := s.conn.WriteJSON(messsage)
+	if err != nil {
+		return err
+	}
+	return nil
 }
